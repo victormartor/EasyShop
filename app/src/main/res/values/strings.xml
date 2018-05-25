@@ -1,3 +1,86 @@
 <resources>
-    <string name="app_name">EasyShop</string>
+    <!--General-->
+    <string name="app_name" translatable="false">EasyShop</string>
+    <string name="action_settings">Ajustes</string>
+
+    <string name="confirmar">Confirmar</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="cargando">Cargando…</string>
+
+    <!--Detalle articulo-->
+    <string name="tallas">Tallas</string>
+    <string name="colores">Otros colores</string>
+    <string name="ficha">Ver ficha técnica</string>
+    <string name="no_ficha">Este artículo no tiene ficha técnica</string>
+
+    <string name="talla">Talla</string>
+    <string name="color">Color</string>
+    <string name="moneda">€</string>
+
+    <!--Añadir al carrito-->
+    <string name="annadir">Añadir al carrito</string>
+    <string name="confirmacion_al_carro">¿Seguro que quiere añadir el artículo al carrito?</string>
+
+    <!--Confirmar compra-->
+    <string name="compra">Confirmar compra</string>
+    <string name="confirmacion_compra">¿Seguro que quiere confirmar su compra?</string>
+    <string name="enviando_ticket">Enviando ticket de compra</string>
+    <string name="ticket_enviado">Ticket enviado</string>
+    <string name="ticket_enviado_confirmacion">Su ticket ha sido enviado correctamente.</string>
+    <string name="recuerde">RECUERDE: su número de cliente es el </string>
+    <string name="error">Error al conectar</string>
+
+    <!--Carrito-->
+    <string name="tu_carro">Su carrito</string>
+    <string name="ver_carro">Ver carrito</string>
+    <string name="num_articulos">Núm. artículos</string>
+    <string name="precio_total">Precio total</string>
+
+    <!--Vaciar carrito-->
+    <string name="vaciar_carro">Vaciar carrito</string>
+    <string name="carro_vacio">Su carrito está vacío</string>
+    <string name="confirmacion_vaciar_carro">¿Seguro que quiere vaciar el carrito?</string>
+
+    <!--Eliminar item de carrito-->
+    <string name="eliminar_item">Eliminar artículo</string>
+    <string name="confirmacion_eliminar_item">¿Seguro que quiere eliminar el artículo del carrito?</string>
+
+    <!--Ticket-->
+    <string name="articulo">Artículos</string>
+    <string name="precio">Precio</string>
+    <string name="total">Total</string>
+    <string name="informacion_adicional">Una vez confirmes tu compra debes abonar el pedido el caja.</string>
+
+    <!--Confirmar pedido-->
+    <string name="comprar">Confirmar y pagar en caja</string>
+
+    <!--Combinaciones-->
+    <string name="articulo_annadido">Su artículo ha sido añadido al carrito correctamente</string>
+    <string name="combinaciones">También puede interesarle:</string>
+
+    <!--Inactividad-->
+    <string name="inactividad">Inactividad</string>
+    <string name="texto_inactividad">La aplicación ha estado inactiva demasiado tiempo, si no se hace nada procederá a reiniciarse.</string>
+
+    <!--Imagen-->
+    <string name="cargar_imagen">Cargando imagen</string>
+    <string name="zoom">Puede hacer zoom en la imagen con los dedos</string>
+
+    <!--Busqueda de articulo-->
+    <string name="busq_art">Búsqueda de artículo</string>
+    <string name="buscar">Buscar</string>
+    <string name="no_encontrado">Ningún artículo coincide con el criterio de búsqueda</string>
+    <string name="nueva_busqueda">Nueva búsqueda</string>
+    <string name="resultado_busq">Resultados de la búsqueda</string>
+
+    <!--Conectar con el servidor-->
+    <string name="direccion_IP">Dirección IP Servidor</string>
+    <string name="error_conexion">Error, no es posible conectar con el servidor</string>
+    <string name="conectar">Conectar</string>
+
+
+    <string name="title_activity_marcas">MarcasActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

@@ -1,9 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/pantalla_carga">
 
-</android.support.constraint.ConstraintLayout>
+
+
+        <!--
+        <TextView
+            android:id="@+id/texto_cargando"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+
+            android:layout_gravity="center_horizontal|bottom"
+            android:shadowColor="@android:color/black"
+            android:shadowDx="3"
+            android:shadowDy="2"
+            android:shadowRadius="1.8"
+            android:text="@string/cargando"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+            -->
+    <ProgressBar
+    android:id="@+id/progreso"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="left|bottom"
+    android:visibility="invisible"
+    android:layout_marginLeft="85dp"
+    android:layout_marginBottom="20dp"/>
+
+    <LinearLayout
+    android:id="@+id/layout_elementos_splash"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|left"
+    android:layout_marginLeft="20dp"
+    android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/direccion_IP"
+            android:textColor="@color/foreground_text"
+            android:textStyle="bold"
+            android:layout_marginRight="10dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="1dp"
+            android:background="@color/background_button_confirmar">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@android:color/white"
+                android:layout_gravity="center">
+
+                <EditText
+                    android:id="@+id/direccionIP_1oct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="2"
+                    android:inputType="number"
+                    android:background="@color/background_text"
+                    android:textColor="@color/foreground_text"
+                    android:maxLength="3"
+                    android:imeOptions="actionNext"
+                    android:gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="."
+                    android:background="@color/background_text"
+                    android:textColor="@color/foreground_text"/>
+
+                <EditText
+                    android:id="@+id/direccionIP_2oct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="2"
+                    android:inputType="number"
+                    android:background="@color/background_text"
+                    android:textColor="@color/foreground_text"
+                    android:maxLength="3"
+                    android:imeOptions="actionNext"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="."
+                    android:background="@color/background_text"
+                    android:textColor="@color/foreground_text"/>
+
+                <EditText
+                    android:id="@+id/direccionIP_3oct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="2"
+                    android:inputType="number"
+                    android:background="@color/background_text"
+                    android:textColor="@color/foreground_text"
+                    android:maxLength="3"
+                    android:imeOptions="actionNext"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="."
+                    android:textColor="@android:color/black"
+                    android:background="@android:color/white"/>
+
+                <EditText
+                    android:id="@+id/direccionIP_4oct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="2"
+                    android:inputType="number"
+                    android:background="@color/background_text"
+                    android:textColor="@color/foreground_text"
+                    android:maxLength="3"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+
+        <Button
+            android:id="@+id/boton_confirmar"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:onClick="confirmar"
+            android:text="@string/conectar"
+            android:textSize="12sp"
+            android:backgroundTint="@color/background_button_confirmar"
+            android:textColor="@color/foreground_button_confirmar"
+
+            />
+
+
+    </LinearLayout>
+</FrameLayout>

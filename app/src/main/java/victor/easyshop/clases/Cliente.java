@@ -46,6 +46,7 @@ public class Cliente
         String sRespuesta = null;
         int iPuerto = Integer.parseInt(sPuerto);
         SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
+        socketStream.setSoTimeout(5000);
         socketStream.enviaMensaje("conectar");
         sRespuesta = socketStream.recibeMensaje();
         return sRespuesta;
