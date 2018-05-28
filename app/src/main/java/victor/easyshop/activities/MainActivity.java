@@ -1,19 +1,17 @@
 package victor.easyshop.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import java.io.IOException;
 
 import victor.easyshop.R;
 import victor.easyshop.clases.Cliente;
+import victor.easyshop.data.EasyShop;
 
 /*
  * Autor: Víctor Martín Torres - 30/8/17
@@ -23,9 +21,6 @@ import victor.easyshop.clases.Cliente;
  */
 public class MainActivity extends Activity
 {
-    //public static BasedeDatos basedeDatos;
-    //public static int numCliente = 1;
-    public static String sIP_Servidor;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -38,7 +33,7 @@ public class MainActivity extends Activity
     {
         //OBTENER LA IP
         EditText txtIP = findViewById(R.id.direccionIP_1oct);
-        sIP_Servidor = txtIP.getText().toString()+".";
+        String sIP_Servidor = txtIP.getText().toString()+".";
 
         txtIP = findViewById(R.id.direccionIP_2oct);
         sIP_Servidor += txtIP.getText().toString()+".";
@@ -49,22 +44,22 @@ public class MainActivity extends Activity
         txtIP = findViewById(R.id.direccionIP_4oct);
         sIP_Servidor += txtIP.getText().toString();
 
-        findViewById(R.id.boton_confirmar).setVisibility(View.INVISIBLE);
-        findViewById(R.id.layout_elementos_splash).setVisibility(View.INVISIBLE);
+        ((EasyShop)this.getApplication()).setIP_Servidor(sIP_Servidor);
 
-        findViewById(R.id.progreso).setVisibility(View.VISIBLE);
-
-        ConectarServidor tarea = new ConectarServidor();
-        tarea.execute();
+        new ConectarServidor().execute();
     }
-
 
     private class ConectarServidor extends AsyncTask<Void, Void, Void>
     {
         private String _sRespuesta;
+        private ProgressDialog _pDialog;
+
         @Override
         protected Void doInBackground(Void... params) {
 
+            publishProgress();
+
+            String sIP_Servidor = ((EasyShop)getApplicationContext()).getIP_Servidor();
             String sPuerto = "5000";
             try {
                 _sRespuesta = Cliente.conectar(sIP_Servidor, sPuerto);
@@ -84,14 +79,19 @@ public class MainActivity extends Activity
         protected void onPreExecute()
         {
             _sRespuesta = "";
-            ProgressBar progressBar = findViewById(R.id.progreso);
-            progressBar.setProgress(0);
+            _pDialog = new ProgressDialog(MainActivity.this);
+            _pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            _pDialog.setMessage(getString(R.string.cargando));
+            _pDialog.setCancelable(false);
+
+            _pDialog.show();
         }
 
         @Override
         protected void onPostExecute(Void result)
         {
-            if(_sRespuesta.equals("conectado")){
+            _pDialog.dismiss();
+            if(_sRespuesta.equals("conectado")) {
                 Intent intent = new Intent(MainActivity.this, MarcasActivity.class);
                 startActivity(intent);
                 finish();
@@ -100,24 +100,16 @@ public class MainActivity extends Activity
                 Toast toast = Toast.makeText(MainActivity.this,
                         getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
                 toast.show();
-
-                findViewById(R.id.boton_confirmar).setVisibility(View.VISIBLE);
-                findViewById(R.id.layout_elementos_splash).setVisibility(View.VISIBLE);
-                findViewById(R.id.progreso).setVisibility(View.INVISIBLE);
             }
         }
 
         @Override
         protected void onCancelled() {
+            _pDialog.dismiss();
             Toast toast = Toast.makeText(MainActivity.this,
                     getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
             toast.show();
-
-            findViewById(R.id.boton_confirmar).setVisibility(View.VISIBLE);
-            findViewById(R.id.layout_elementos_splash).setVisibility(View.VISIBLE);
-            findViewById(R.id.progreso).setVisibility(View.INVISIBLE);
         }
     }
-
 }
 

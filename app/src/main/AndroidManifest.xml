@@ -3,6 +3,7 @@
     package="victor.easyshop">
 
     <application
+        android:name=".data.EasyShop"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,6 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:largeHeap="true">
+
+
         <activity
             android:name=".activities.MainActivity"
             android:screenOrientation="sensorLandscape">
@@ -24,12 +27,9 @@
         </activity>
         <activity
             android:name=".activities.MarcasActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_marcas"
-            android:theme="@style/FullscreenTheme">
+            android:screenOrientation="sensorLandscape"
+            android:launchMode="singleTask"/>
 
-
-        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

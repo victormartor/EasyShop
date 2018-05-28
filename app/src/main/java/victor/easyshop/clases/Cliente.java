@@ -1,6 +1,7 @@
 package victor.easyshop.clases;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Autor: Víctor Martín Torres - 30/8/17
@@ -49,6 +50,33 @@ public class Cliente
         socketStream.setSoTimeout(5000);
         socketStream.enviaMensaje("conectar");
         sRespuesta = socketStream.recibeMensaje();
+        socketStream.close();
         return sRespuesta;
+    }
+
+    public static ArrayList<Marca> getMarcas(String sIP_Servidor, String sPuerto) throws IOException {
+        String sRespuesta = null;
+        int iPuerto = Integer.parseInt(sPuerto);
+        SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
+        socketStream.setSoTimeout(5000);
+        socketStream.enviaMensaje("marcas");
+
+        ArrayList<Marca> aMarcas = new ArrayList<>();
+        sRespuesta = socketStream.recibeMensaje();
+        while(!sRespuesta.equals("FinMarcas")){
+            String[] sMarca = sRespuesta.split(":");
+            Marca marca = new Marca(Integer.parseInt(sMarca[0]),sMarca[1]);
+
+            sRespuesta = socketStream.recibeMensaje();
+            Imagen imagen = new Imagen("http://"+sIP_Servidor+"/EasyShop/Imagenes/"+sRespuesta);
+            System.out.println(imagen.getUrl());
+            marca.setImagen(imagen);
+
+            aMarcas.add(marca);
+            sRespuesta = socketStream.recibeMensaje();
+        }
+
+        socketStream.close();
+        return aMarcas;
     }
 } // fin de class
