@@ -69,7 +69,6 @@ public class Cliente
 
             sRespuesta = socketStream.recibeMensaje();
             Imagen imagen = new Imagen("http://"+sIP_Servidor+"/EasyShop/Imagenes/"+sRespuesta);
-            //System.out.println(imagen.getUrl());
             marca.setImagen(imagen);
 
             aMarcas.add(marca);
@@ -78,5 +77,52 @@ public class Cliente
 
         socketStream.close();
         return aMarcas;
+    }
+
+    public static Marca getMarca(Integer iId_Marca, String sIP_Servidor, String sPuerto) throws IOException {
+        String sRespuesta = null;
+        int iPuerto = Integer.parseInt(sPuerto);
+        SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
+        socketStream.setSoTimeout(5000);
+        socketStream.enviaMensaje("marca");
+        socketStream.enviaMensaje(iId_Marca.toString());
+        sRespuesta = socketStream.recibeMensaje();
+
+        String[] sMarca = sRespuesta.split(":");
+        Marca marca = new Marca(Integer.parseInt(sMarca[0]),sMarca[1]);
+
+        sRespuesta = socketStream.recibeMensaje();
+        Imagen imagen = new Imagen("http://"+sIP_Servidor+"/EasyShop/Imagenes/"+sRespuesta);
+        marca.setImagen(imagen);
+
+        socketStream.close();
+        return marca;
+    }
+
+    public static ArrayList<Categoria> getCategorias(Integer iId_Marca, String sIP_Servidor, String sPuerto) throws IOException {
+        String sRespuesta = null;
+        int iPuerto = Integer.parseInt(sPuerto);
+        SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
+        socketStream.setSoTimeout(5000);
+        socketStream.enviaMensaje("categorias");
+        socketStream.enviaMensaje(iId_Marca.toString());
+
+        ArrayList<Categoria> aCategorias = new ArrayList<>();
+        sRespuesta = socketStream.recibeMensaje();
+        while(!sRespuesta.equals("FinCategorias")){
+            String[] sCategoria = sRespuesta.split(":");
+            Categoria categoria = new Categoria(Integer.parseInt(sCategoria[0]), sCategoria[1],
+                    Integer.parseInt(sCategoria[3]));
+
+            sRespuesta = socketStream.recibeMensaje();
+            Imagen imagen = new Imagen("http://"+sIP_Servidor+"/EasyShop/Imagenes/"+sRespuesta);
+            categoria.setImagen(imagen);
+
+            aCategorias.add(categoria);
+            sRespuesta = socketStream.recibeMensaje();
+        }
+
+        socketStream.close();
+        return aCategorias;
     }
 } // fin de class

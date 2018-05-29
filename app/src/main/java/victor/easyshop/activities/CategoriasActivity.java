@@ -12,9 +12,11 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import victor.easyshop.Adapters.CategoriaAdapter;
 import victor.easyshop.Adapters.MarcaAdapter;
 import victor.easyshop.R;
 import victor.easyshop.clases.Cliente;
+import victor.easyshop.clases.Marca;
 import victor.easyshop.data.EasyShop;
 
 /*
@@ -42,7 +44,7 @@ public class CategoriasActivity extends AppCompatActivity //implements AdapterVi
         //Marca marca = Marca.getMarcadeLista(ActividadSplash.basedeDatos.getMarcas(),getIntent().getIntExtra(EXTRA_MARCA, 0));
 
         //GridView
-        //new cargarCategorias().execute();
+        new cargarCategorias().execute(getIntent().getIntExtra(EXTRA_MARCA, 0));
 
         //Imagen de la marca
         /*
@@ -72,25 +74,28 @@ public class CategoriasActivity extends AppCompatActivity //implements AdapterVi
 
     //CARGAR DATOS//////////////////////////////////////
 
-    //clase cargar marcas
-    /*
-    private class cargarCategorias extends AsyncTask<Void, Void, MarcaAdapter>
+    //clase cargar categorias
+    private class cargarCategorias extends AsyncTask<Integer, Void, CategoriaAdapter>
     {
         private String _sRespuesta;
         private ProgressDialog _pDialog;
+        private Marca _marca;
 
         @Override
-        protected MarcaAdapter doInBackground(Void... params) {
+        protected CategoriaAdapter doInBackground(Integer... params) {
 
-            publishProgress();
-
+            int iId_Marca = params[0];
             String sIP_Servidor = ((EasyShop)getApplicationContext()).getIP_Servidor();
             String sPuerto = "5000";
             try {
-                MarcaAdapter marcaAdapter = new MarcaAdapter(MarcasActivity.this,
-                        Cliente.getMarcas(sIP_Servidor, sPuerto));
+                _marca = Cliente.getMarca(iId_Marca, sIP_Servidor, sPuerto);
+                _marca.getImagen().cargarImagen();
+                CategoriaAdapter categoriaAdapter = new CategoriaAdapter(CategoriasActivity.this,
+                        Cliente.getCategorias(iId_Marca, sIP_Servidor, sPuerto));
+                //MarcaAdapter marcaAdapter = new MarcaAdapter(MarcasActivity.this,
+                        //Cliente.getMarcas(sIP_Servidor, sPuerto));
                 _sRespuesta = "conectado";
-                return marcaAdapter;
+                return categoriaAdapter;
             } catch (Exception e) {
                 _sRespuesta = e.toString();
                 cancel(false);
@@ -107,7 +112,7 @@ public class CategoriasActivity extends AppCompatActivity //implements AdapterVi
         protected void onPreExecute()
         {
             _sRespuesta = "";
-            _pDialog = new ProgressDialog(MarcasActivity.this);
+            _pDialog = new ProgressDialog(CategoriasActivity.this);
             _pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             _pDialog.setMessage(getString(R.string.cargando));
             _pDialog.setCancelable(false);
@@ -116,16 +121,21 @@ public class CategoriasActivity extends AppCompatActivity //implements AdapterVi
         }
 
         @Override
-        protected void onPostExecute(MarcaAdapter marcaAdapter)
+        protected void onPostExecute(CategoriaAdapter categoriaAdapter)
         {
             _pDialog.dismiss();
             if(_sRespuesta.equals("conectado")) {
+                //Imagen de la marca
+                ImageView imagenMarca = findViewById(R.id.imageViewMarca);
+                imagenMarca.setImageBitmap(_marca.getImagenBitmap());
+
+                //GRIDVIEW
                 GridView gridView = findViewById(R.id.grid);
-                gridView.setAdapter(marcaAdapter);
+                gridView.setAdapter(categoriaAdapter);
                 //gridView.setOnItemClickListener(MarcasActivity.this);
             }
             else{
-                Toast toast = Toast.makeText(MarcasActivity.this,
+                Toast toast = Toast.makeText(CategoriasActivity.this,
                         getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
                 toast.show();
             }
@@ -134,12 +144,11 @@ public class CategoriasActivity extends AppCompatActivity //implements AdapterVi
         @Override
         protected void onCancelled() {
             _pDialog.dismiss();
-            Toast toast = Toast.makeText(MarcasActivity.this,
+            Toast toast = Toast.makeText(CategoriasActivity.this,
                     getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
             toast.show();
         }
     }
-    */
 
     //NAVEGAR A OTRA ACTIVIDAD/////////////////////////
 
