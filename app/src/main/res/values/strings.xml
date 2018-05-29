@@ -78,9 +78,4 @@
     <string name="direccion_IP">Dirección IP Servidor</string>
     <string name="error_conexion">Error, no es posible conectar con el servidor</string>
     <string name="conectar">Conectar</string>
-
-
-    <string name="title_activity_marcas">MarcasActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

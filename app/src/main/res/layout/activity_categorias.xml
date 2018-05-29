@@ -4,19 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    android:background="@color/background_floating_material_light"
+    android:background="@android:color/white"
     android:orientation="horizontal">
+
 
     <include layout="@layout/toolbar"/>
 
     <GridView
         android:id="@+id/grid"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
-        android:columnWidth="120dp"
         android:horizontalSpacing="@dimen/espacio_grilla"
         android:numColumns="2"
         android:padding="5dp"
-        android:verticalSpacing="@dimen/espacio_grilla" />
+        android:verticalSpacing="@dimen/espacio_grilla"
+        />
+
 </LinearLayout>

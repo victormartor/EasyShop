@@ -4,20 +4,17 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 import victor.easyshop.Adapters.MarcaAdapter;
 import victor.easyshop.R;
 import victor.easyshop.clases.Cliente;
-import victor.easyshop.clases.Marca;
 import victor.easyshop.data.EasyShop;
 
 /*
@@ -28,33 +25,36 @@ import victor.easyshop.data.EasyShop;
  * También tiene una Toolbar a la izquierda que contiene:
  *    -un botón para acceder al carrito.
  */
-public class MarcasActivity extends AppCompatActivity implements AdapterView.OnItemClickListener
+public class CategoriasActivity extends AppCompatActivity //implements AdapterView.OnItemClickListener
 {
-    //public static Carro carrito;
-    //public static Inactividad inactividad;
+    public static final String EXTRA_MARCA = "marca";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_marcas);
+        setContentView(R.layout.activity_categorias);
 
-        //Toolbar
-        ImageView imageView = findViewById(R.id.imageViewMarca);
-        imageView.setBackgroundColor(Color.BLACK);
+        //Personalizar Toolbar
+        usarToolbar();
+
+        //Inicializar atributos
+        //Marca marca = Marca.getMarcadeLista(ActividadSplash.basedeDatos.getMarcas(),getIntent().getIntExtra(EXTRA_MARCA, 0));
 
         //GridView
-        /*
-        GridView gridView = findViewById(R.id.grid);
-        MarcaAdapter marcaAdapter = new MarcaAdapter(this, new ArrayList<Marca>());
-        gridView.setAdapter(marcaAdapter);
-        */
-        //gridView.setOnItemClickListener(this);
-        new cargarMarcas().execute();
+        //new cargarCategorias().execute();
 
-        //carro
+        //Imagen de la marca
         /*
-        if(carrito == null) carrito = new Carro();
+        ImageView imagenMarca = findViewById(R.id.imageViewMarca);
+        imagenMarca.setImageBitmap(marca.getImagenBitmap());
+        */
+
+        //Inactividad
+        //if(inactividad != null) inactividad.onProgressUpdate(this);
+
+        //Carrito
+        /*
         TextView num_art_carrito = (TextView)findViewById(R.id.numero_art_carrito);
         int n = carrito.getArticulos().size();
         if (n > 0)
@@ -63,11 +63,6 @@ public class MarcasActivity extends AppCompatActivity implements AdapterView.OnI
             num_art_carrito.setText(String.format(Locale.ENGLISH,"%d",n));
         }
         else num_art_carrito.setVisibility(View.INVISIBLE);
-        */
-
-        //Inactividad
-        /*
-        if(inactividad != null) inactividad.onProgressUpdate(this);
         */
     }
 
@@ -78,13 +73,16 @@ public class MarcasActivity extends AppCompatActivity implements AdapterView.OnI
     //CARGAR DATOS//////////////////////////////////////
 
     //clase cargar marcas
-    private class cargarMarcas extends AsyncTask<Void, Void, MarcaAdapter>
+    /*
+    private class cargarCategorias extends AsyncTask<Void, Void, MarcaAdapter>
     {
         private String _sRespuesta;
         private ProgressDialog _pDialog;
 
         @Override
         protected MarcaAdapter doInBackground(Void... params) {
+
+            publishProgress();
 
             String sIP_Servidor = ((EasyShop)getApplicationContext()).getIP_Servidor();
             String sPuerto = "5000";
@@ -124,7 +122,7 @@ public class MarcasActivity extends AppCompatActivity implements AdapterView.OnI
             if(_sRespuesta.equals("conectado")) {
                 GridView gridView = findViewById(R.id.grid);
                 gridView.setAdapter(marcaAdapter);
-                gridView.setOnItemClickListener(MarcasActivity.this);
+                //gridView.setOnItemClickListener(MarcasActivity.this);
             }
             else{
                 Toast toast = Toast.makeText(MarcasActivity.this,
@@ -141,55 +139,84 @@ public class MarcasActivity extends AppCompatActivity implements AdapterView.OnI
             toast.show();
         }
     }
+    */
 
     //NAVEGAR A OTRA ACTIVIDAD/////////////////////////
 
-    //Acción al pulsar en una de las marcas
+    //Acción al pulsar en una de las categorias
+    /*
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
-        Marca item = (Marca) parent.getItemAtPosition(position);
-        Intent intent = new Intent(this, CategoriasActivity.class);
-        intent.putExtra(CategoriasActivity.EXTRA_MARCA, item.getId());
-
-        /*
         if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
         {
             inactividad = new Inactividad();
-            inactividad.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,this);
+            inactividad.execute(this);
         }
-        */
+        Categoria item = (Categoria) parent.getItemAtPosition(position);
+
+        Intent intent = new Intent(this, ActividadArticulos.class);
+        intent.putExtra(ActividadArticulos.EXTRA_CATEGORIA, item.getId());
+        intent.putExtra(ActividadArticulos.EXTRA_MARCA, item.getMarca().getId());
 
         startActivity(intent);
-    }
+        finish();
+    }*/
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //MÉTODOS GENERALES
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Función para personalizar la Toolbar
+    private void usarToolbar()
+    {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        //Añadir el botón flecha para volver atrás
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    //Acción del botón para volver atrás
+    @Override
+    public boolean onSupportNavigateUp()
+    {
+        onBackPressed();
+        return false;
+    }
+
     //Acción al pulsar el icono de la marca (en esta actividad no hace nada pero hay que declararlo igualmente)
     public void iraMarca(View view) {}
 
-    //Acción al pulsar en el icono del carrito
+    //Ación al pulsar el botón del carrito
     public void verCarro(View view)
     {
         /*
         if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
         {
             inactividad = new Inactividad();
-            inactividad.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,this);
+            inactividad.execute(this);
         }
-
-        Intent intent = new Intent(this, ActividadCarrito.class);
-        startActivityForResult(intent,0);
         */
         Intent intent = new Intent(this, CarritoActivity.class);
         startActivity(intent);
     }
 
-
-    //Acción al pulsar el icono de la aplicación (no hace nada)
-    public void portada(View view){}
+    //Acción al pulsar el icono de la aplicación
+    public void portada(View view)
+    {
+        /*
+        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
+        {
+            inactividad = new Inactividad();
+            inactividad.execute(this);
+        }
+        */
+        Intent intent = new Intent(this, MarcasActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
 
     /*
     @Override
@@ -208,26 +235,21 @@ public class MarcasActivity extends AppCompatActivity implements AdapterView.OnI
     }
     */
 
-    /*
     @Override
     public void onBackPressed()
     {
-        super.onBackPressed();
-        carrito = null;
-        if(inactividad != null)
-        {
-            inactividad.cancel(true);
-            inactividad = null;
-        }
-        basedeDatos = null;
-        nombreMaquina = null;
-        numCliente = 1;
-        finish();
+        Intent intent = new Intent(this, MarcasActivity.class);
 
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        /*
+        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
+        {
+            inactividad = new Inactividad();
+            inactividad.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,this);
+        }
+        */
+
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+        finish();
     }
-    */
 }

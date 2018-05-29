@@ -11,36 +11,36 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import victor.easyshop.R;
-import victor.easyshop.clases.Marca;
+import victor.easyshop.clases.Categoria;
 
 /*
  * Autor: Víctor Martín Torres - 30/8/17
  *
  * Clase AdaptadorDeMarcas: adaptador para personalizar la vista de las marcas en la ActividadPrincipal
  */
-public class MarcaAdapter extends BaseAdapter
+public class CategoriaAdapter extends BaseAdapter
 {
     private Context _context;
-    private ArrayList<Marca> _aMarcas;
+    private ArrayList<Categoria> _aCategorias;
 
-    public MarcaAdapter(Context context, ArrayList<Marca> aMarcas)
+    public CategoriaAdapter(Context context, ArrayList<Categoria> aCategorias)
     {
         _context = context;
-        _aMarcas = aMarcas;
-        for(Marca marca : _aMarcas)
-            marca.getImagen().cargarImagenHD();
+        _aCategorias = aCategorias;
+        for(Categoria categoria : _aCategorias)
+            categoria.getImagen().cargarImagen();
     }
 
     @Override
     public int getCount()
     {
-        return _aMarcas.size();
+        return _aCategorias.size();
     }
 
     @Override
-    public Marca getItem(int index)
+    public Categoria getItem(int index)
     {
-        return _aMarcas.get(index);
+        return _aCategorias.get(index);
     }
 
     @Override
@@ -58,20 +58,21 @@ public class MarcaAdapter extends BaseAdapter
             view = inflater.inflate(R.layout.grid_item, viewGroup, false);
         }
 
-        ImageView imagenMarca = view.findViewById(R.id.imagen);
+        ImageView imagenCategoria = view.findViewById(R.id.imagen);
         TextView textoNombre = view.findViewById(R.id.texto);
-        Marca item = getItem(position);
+        Categoria item = getItem(position);
 
         if(item.getImagenBitmap() != null)
         {
-            imagenMarca.setImageBitmap(item.getImagenBitmap());
+            imagenCategoria.setImageBitmap(item.getImagenBitmap());
         }
         else
         {
-            imagenMarca.setImageResource(R.drawable.ic_file);
-            imagenMarca.setScaleType(ImageView.ScaleType.CENTER);
+            imagenCategoria.setImageResource(R.drawable.ic_file);
+            imagenCategoria.setScaleType(ImageView.ScaleType.CENTER);
         }
-        textoNombre.setVisibility(View.INVISIBLE);
+
+        textoNombre.setText(item.getNombre());
 
         return view;
     }

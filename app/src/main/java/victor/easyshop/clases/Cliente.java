@@ -69,7 +69,7 @@ public class Cliente
 
             sRespuesta = socketStream.recibeMensaje();
             Imagen imagen = new Imagen("http://"+sIP_Servidor+"/EasyShop/Imagenes/"+sRespuesta);
-            System.out.println(imagen.getUrl());
+            //System.out.println(imagen.getUrl());
             marca.setImagen(imagen);
 
             aMarcas.add(marca);
