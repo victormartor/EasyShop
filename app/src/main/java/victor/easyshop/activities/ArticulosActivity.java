@@ -12,9 +12,10 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import victor.easyshop.adapters.CategoriaAdapter;
 import victor.easyshop.R;
-import victor.easyshop.clases.Categoria;
+import victor.easyshop.adapters.ArticuloAdapter;
+import victor.easyshop.adapters.CategoriaAdapter;
+import victor.easyshop.clases.Articulo;
 import victor.easyshop.clases.Cliente;
 import victor.easyshop.clases.Marca;
 import victor.easyshop.data.EasyShop;
@@ -22,13 +23,17 @@ import victor.easyshop.data.EasyShop;
 /*
  * Autor: Víctor Martín Torres - 30/8/17
  *
- * Clase ActividadPrincipal: muestra un GridView con las diferentes marcas.
+ * Clase ActividadArticulos: muestra un GridView con los artículos de la categoría elegida mostrando sus precios.
  *
  * También tiene una Toolbar a la izquierda que contiene:
+ *    -un botón para volver atrás.
+ *    -un botón con la imagen de la marca que si es presionado lleva directamente a las categorías de la marca.
  *    -un botón para acceder al carrito.
+ *    -un botón con el icono de la aplicación que lleva al menú de marcas.
  */
-public class CategoriasActivity extends AppCompatActivity implements AdapterView.OnItemClickListener
+public class ArticulosActivity extends AppCompatActivity implements AdapterView.OnItemClickListener
 {
+    public static final String EXTRA_CATEGORIA = "categoria";
     public static final String EXTRA_MARCA = "marca";
 
     @Override
@@ -43,20 +48,19 @@ public class CategoriasActivity extends AppCompatActivity implements AdapterView
         //Inicializar atributos
         //Marca marca = Marca.getMarcadeLista(ActividadSplash.basedeDatos.getMarcas(),getIntent().getIntExtra(EXTRA_MARCA, 0));
 
-        //GridView
-        new cargarCategorias().execute(getIntent().getIntExtra(EXTRA_MARCA, 0));
+        //Gridview
+        new cargarArticulos().execute(getIntent().getIntExtra(EXTRA_MARCA, 0),
+                                      getIntent().getIntExtra(EXTRA_CATEGORIA, 0));
 
-        //Imagen de la marca
         /*
-        ImageView imagenMarca = findViewById(R.id.imageViewMarca);
+        //Imagen de marca
+        ImageView imagenMarca = (ImageView) findViewById(R.id.imageViewMarca);
         imagenMarca.setImageBitmap(marca.getImagenBitmap());
-        */
 
         //Inactividad
-        //if(inactividad != null) inactividad.onProgressUpdate(this);
+        if(inactividad != null) inactividad.onProgressUpdate(this);
 
         //Carrito
-        /*
         TextView num_art_carrito = (TextView)findViewById(R.id.numero_art_carrito);
         int n = carrito.getArticulos().size();
         if (n > 0)
@@ -74,28 +78,28 @@ public class CategoriasActivity extends AppCompatActivity implements AdapterView
 
     //CARGAR DATOS//////////////////////////////////////
 
-    //clase cargar categorias
-    private class cargarCategorias extends AsyncTask<Integer, Void, CategoriaAdapter>
+    //clase cargar articulos
+    private class cargarArticulos extends AsyncTask<Integer, Void, ArticuloAdapter>
     {
         private String _sRespuesta;
         private ProgressDialog _pDialog;
         private Marca _marca;
 
         @Override
-        protected CategoriaAdapter doInBackground(Integer... params) {
+        protected ArticuloAdapter doInBackground(Integer... params) {
 
             int iId_Marca = params[0];
+            int iId_Categoria = params[1];
             String sIP_Servidor = ((EasyShop)getApplicationContext()).getIP_Servidor();
             String sPuerto = "5000";
             try {
                 _marca = Cliente.getMarca(iId_Marca, sIP_Servidor, sPuerto);
                 _marca.getImagen().cargarImagen();
-                CategoriaAdapter categoriaAdapter = new CategoriaAdapter(CategoriasActivity.this,
-                        Cliente.getCategorias(iId_Marca, sIP_Servidor, sPuerto));
-                //MarcaAdapter marcaAdapter = new MarcaAdapter(MarcasActivity.this,
-                        //Cliente.getMarcas(sIP_Servidor, sPuerto));
+                ArticuloAdapter articuloAdapter = new ArticuloAdapter(ArticulosActivity.this,
+                        Cliente.getArticulos(iId_Categoria, sIP_Servidor, sPuerto));
+
                 _sRespuesta = "conectado";
-                return categoriaAdapter;
+                return articuloAdapter;
             } catch (Exception e) {
                 _sRespuesta = e.toString();
                 cancel(false);
@@ -112,7 +116,7 @@ public class CategoriasActivity extends AppCompatActivity implements AdapterView
         protected void onPreExecute()
         {
             _sRespuesta = "";
-            _pDialog = new ProgressDialog(CategoriasActivity.this);
+            _pDialog = new ProgressDialog(ArticulosActivity.this);
             _pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             _pDialog.setMessage(getString(R.string.cargando));
             _pDialog.setCancelable(false);
@@ -121,7 +125,7 @@ public class CategoriasActivity extends AppCompatActivity implements AdapterView
         }
 
         @Override
-        protected void onPostExecute(CategoriaAdapter categoriaAdapter)
+        protected void onPostExecute(ArticuloAdapter articuloAdapter)
         {
             _pDialog.dismiss();
             if(_sRespuesta.equals("conectado")) {
@@ -131,11 +135,11 @@ public class CategoriasActivity extends AppCompatActivity implements AdapterView
 
                 //GRIDVIEW
                 GridView gridView = findViewById(R.id.grid);
-                gridView.setAdapter(categoriaAdapter);
-                gridView.setOnItemClickListener(CategoriasActivity.this);
+                gridView.setAdapter(articuloAdapter);
+                gridView.setOnItemClickListener(ArticulosActivity.this);
             }
             else{
-                Toast toast = Toast.makeText(CategoriasActivity.this,
+                Toast toast = Toast.makeText(ArticulosActivity.this,
                         getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
                 toast.show();
             }
@@ -144,7 +148,7 @@ public class CategoriasActivity extends AppCompatActivity implements AdapterView
         @Override
         protected void onCancelled() {
             _pDialog.dismiss();
-            Toast toast = Toast.makeText(CategoriasActivity.this,
+            Toast toast = Toast.makeText(ArticulosActivity.this,
                     getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
             toast.show();
         }
@@ -152,10 +156,17 @@ public class CategoriasActivity extends AppCompatActivity implements AdapterView
 
     //NAVEGAR A OTRA ACTIVIDAD/////////////////////////
 
-    //Acción al pulsar en una de las categorias
+    //Acción al pulsar en uno de los artículos del GridView
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
+        Articulo item = (Articulo) parent.getItemAtPosition(position);
+
+        Intent intent = new Intent(this, UnArticuloActivity.class);
+        intent.putExtra(UnArticuloActivity.EXTRA_ARTICULO, item.getId());
+        intent.putExtra(UnArticuloActivity.EXTRA_CATEGORIA, getIntent().getIntExtra(EXTRA_CATEGORIA, 0));
+        intent.putExtra(UnArticuloActivity.EXTRA_MARCA, getIntent().getIntExtra(EXTRA_MARCA, 0));
+
         /*
         if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
         {
@@ -163,12 +174,6 @@ public class CategoriasActivity extends AppCompatActivity implements AdapterView
             inactividad.execute(this);
         }
         */
-        Categoria item = (Categoria) parent.getItemAtPosition(position);
-
-        Intent intent = new Intent(this, ArticulosActivity.class);
-        intent.putExtra(ArticulosActivity.EXTRA_CATEGORIA, item.getId());
-        intent.putExtra(ArticulosActivity.EXTRA_MARCA, getIntent().getIntExtra(EXTRA_MARCA, 0));
-
         startActivity(intent);
         finish();
     }
@@ -195,10 +200,24 @@ public class CategoriasActivity extends AppCompatActivity implements AdapterView
         return false;
     }
 
-    //Acción al pulsar el icono de la marca (en esta actividad no hace nada pero hay que declararlo igualmente)
-    public void iraMarca(View view) {}
+    //Acción al pulsar la imagen de la marca
+    public void iraMarca(View view)
+    {
+        /*
+        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
+        {
+            inactividad = new Inactividad();
+            inactividad.execute(this);
+        }
+        */
+        Intent intent = new Intent(this, CategoriasActivity.class);
+        intent.putExtra(CategoriasActivity.EXTRA_MARCA, getIntent().getIntExtra(EXTRA_MARCA, 0));
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
 
-    //Ación al pulsar el botón del carrito
+    //Acción al pulsar el botón del carrito
     public void verCarro(View view)
     {
         /*
@@ -248,7 +267,8 @@ public class CategoriasActivity extends AppCompatActivity implements AdapterView
     @Override
     public void onBackPressed()
     {
-        Intent intent = new Intent(this, MarcasActivity.class);
+        Intent intent = new Intent(this, CategoriasActivity.class);
+        intent.putExtra(CategoriasActivity.EXTRA_MARCA, getIntent().getIntExtra(EXTRA_MARCA, 0));
 
         /*
         if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)

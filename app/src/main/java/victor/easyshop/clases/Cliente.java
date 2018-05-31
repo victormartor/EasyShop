@@ -125,4 +125,105 @@ public class Cliente
         socketStream.close();
         return aCategorias;
     }
+
+    public static ArrayList<Articulo> getArticulos(Integer iId_Categoria, String sIP_Servidor, String sPuerto) throws IOException {
+        String sRespuesta = null;
+        int iPuerto = Integer.parseInt(sPuerto);
+        SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
+        socketStream.setSoTimeout(5000);
+        socketStream.enviaMensaje("articulos");
+        socketStream.enviaMensaje(iId_Categoria.toString());
+
+        ArrayList<Articulo> aArticulos = new ArrayList<>();
+        sRespuesta = socketStream.recibeMensaje();
+        while(!sRespuesta.equals("FinArticulos")){
+            String[] sArticulo = sRespuesta.split(":");
+            Articulo articulo = new Articulo(Integer.parseInt(sArticulo[0]),Double.parseDouble(sArticulo[3]));
+
+            sRespuesta = socketStream.recibeMensaje();
+            Imagen imagen = new Imagen("http://"+sIP_Servidor+"/EasyShop/Imagenes/"+sRespuesta);
+            articulo.setImagen(imagen);
+
+            aArticulos.add(articulo);
+            sRespuesta = socketStream.recibeMensaje();
+        }
+
+        socketStream.close();
+        return aArticulos;
+    }
+
+    public static Articulo getUnArticulo(Integer iId_Articulo, String sIP_Servidor, String sPuerto) throws IOException {
+        String sRespuesta = null;
+        int iPuerto = Integer.parseInt(sPuerto);
+        SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
+        socketStream.setSoTimeout(5000);
+        socketStream.enviaMensaje("articulo");
+        socketStream.enviaMensaje(iId_Articulo.toString());
+
+        sRespuesta = socketStream.recibeMensaje();
+
+        String[] sArticulo = sRespuesta.split(":");
+        Articulo articulo = new Articulo(
+                Integer.parseInt(sArticulo[0]),
+                sArticulo[1],
+                Double.parseDouble(sArticulo[3]),
+                Boolean.parseBoolean(sArticulo[4]));
+
+        socketStream.close();
+        return articulo;
+    }
+
+    public static ArrayList<Articulo_Color> getColoresArticulo(Integer iId_Articulo, String sIP_Servidor, String sPuerto) throws IOException {
+        String sRespuesta = null;
+        int iPuerto = Integer.parseInt(sPuerto);
+        SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
+        socketStream.setSoTimeout(5000);
+        socketStream.enviaMensaje("colores");
+        socketStream.enviaMensaje(iId_Articulo.toString());
+
+        ArrayList<Articulo_Color> aColores = new ArrayList<>();
+        sRespuesta = socketStream.recibeMensaje();
+        while(!sRespuesta.equals("FinColores")){
+            String[] sColor = sRespuesta.split(":");
+
+            int id = Integer.parseInt(sColor[0]);
+            String nombre = sColor[1];
+            ArrayList<Imagen> aImagenes = new ArrayList<>();
+
+            sRespuesta = socketStream.recibeMensaje();
+            while(!sRespuesta.equals("FinImagenes")){
+                Imagen imagen = new Imagen("http://"+sIP_Servidor+"/EasyShop/Imagenes/"+sRespuesta);
+                aImagenes.add(imagen);
+            }
+            Articulo_Color color = new Articulo_Color(id, nombre, aImagenes);
+
+            aColores.add(color);
+            sRespuesta = socketStream.recibeMensaje();
+        }
+
+        socketStream.close();
+        return aColores;
+    }
+
+    public static ArrayList<Articulo_Talla> getTallasArticulo(Integer iId_Articulo, String sIP_Servidor, String sPuerto) throws IOException {
+        String sRespuesta = null;
+        int iPuerto = Integer.parseInt(sPuerto);
+        SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
+        socketStream.setSoTimeout(5000);
+        socketStream.enviaMensaje("tallas");
+        socketStream.enviaMensaje(iId_Articulo.toString());
+
+        ArrayList<Articulo_Talla> aTallas = new ArrayList<>();
+        sRespuesta = socketStream.recibeMensaje();
+        while(!sRespuesta.equals("FinTallas")){
+            String[] sColor = sRespuesta.split(":");
+
+            Articulo_Talla articulo_talla = new Articulo_Talla(Integer.parseInt(sColor[0]), sColor[1]);
+            aTallas.add(articulo_talla);
+            sRespuesta = socketStream.recibeMensaje();
+        }
+
+        socketStream.close();
+        return aTallas;
+    }
 } // fin de class

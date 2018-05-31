@@ -12,9 +12,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
-import victor.easyshop.Adapters.MarcaAdapter;
+import victor.easyshop.adapters.MarcaAdapter;
 import victor.easyshop.R;
 import victor.easyshop.clases.Cliente;
 import victor.easyshop.clases.Marca;
@@ -37,7 +35,7 @@ public class MarcasActivity extends AppCompatActivity implements AdapterView.OnI
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_marcas);
+        setContentView(R.layout.activity_grid);
 
         //Toolbar
         ImageView imageView = findViewById(R.id.imageViewMarca);

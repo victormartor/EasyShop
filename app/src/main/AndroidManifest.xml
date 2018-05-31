@@ -32,7 +32,9 @@
             android:screenOrientation="sensorLandscape" />
         <activity
             android:name=".activities.CategoriasActivity"
-            android:screenOrientation="sensorLandscape"/>
+            android:screenOrientation="sensorLandscape" />
+        <activity android:name=".activities.ArticulosActivity" />
+        <activity android:name=".activities.UnArticuloActivity"></activity>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package victor.easyshop.Adapters;
+package victor.easyshop.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
