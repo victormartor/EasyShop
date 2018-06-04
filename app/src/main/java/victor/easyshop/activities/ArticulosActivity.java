@@ -131,7 +131,15 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
             if(_sRespuesta.equals("conectado")) {
                 //Imagen de la marca
                 ImageView imagenMarca = findViewById(R.id.imageViewMarca);
-                imagenMarca.setImageBitmap(_marca.getImagenBitmap());
+                if(_marca.getImagenBitmap() != null)
+                {
+                    imagenMarca.setImageBitmap(_marca.getImagenBitmap());
+                }
+                else
+                {
+                    imagenMarca.setImageResource(R.drawable.ic_file);
+                    imagenMarca.setScaleType(ImageView.ScaleType.CENTER);
+                }
 
                 //GRIDVIEW
                 GridView gridView = findViewById(R.id.grid);

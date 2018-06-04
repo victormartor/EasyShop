@@ -216,13 +216,11 @@ public class Cliente
         ArrayList<Articulo_Talla> aTallas = new ArrayList<>();
         sRespuesta = socketStream.recibeMensaje();
         while(!sRespuesta.equals("FinTallas")){
-            String[] sColor = sRespuesta.split(":");
-
-            Articulo_Talla articulo_talla = new Articulo_Talla(Integer.parseInt(sColor[0]), sColor[1]);
+            String[] sTalla = sRespuesta.split(":");
+            Articulo_Talla articulo_talla = new Articulo_Talla(Integer.parseInt(sTalla[0]), sTalla[1]);
             aTallas.add(articulo_talla);
             sRespuesta = socketStream.recibeMensaje();
         }
-
         socketStream.close();
         return aTallas;
     }

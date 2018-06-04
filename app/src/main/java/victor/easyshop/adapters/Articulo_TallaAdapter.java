@@ -112,9 +112,4 @@ public class Articulo_TallaAdapter
     public Articulo_Talla getItem(int position) {
         return datos.get(position);
     }
-
-    @Override
-    public long getItemId(int index){
-        return datos.get(index).getId();
-    }
 }

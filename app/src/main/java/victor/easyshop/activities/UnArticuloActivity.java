@@ -2,6 +2,7 @@ package victor.easyshop.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -76,6 +77,7 @@ public class UnArticuloActivity extends AppCompatActivity
         //numTalla = 0;
         new cargarArticulo().execute(getIntent().getIntExtra(EXTRA_MARCA, 0),
                                    getIntent().getIntExtra(EXTRA_ARTICULO, 0));
+        //new cargarTallas().execute(getIntent().getIntExtra(EXTRA_ARTICULO, 0));
         /*
         Marca marca = Marca.getMarcadeLista(ActividadSplash.basedeDatos.getMarcas(),getIntent().getIntExtra(EXTRA_MARCA, 0));
         Categoria categoria = Categoria.getCategoriadeLista(marca.getCategoriasVector(), getIntent().getIntExtra(EXTRA_CATEGORIA, 0));
@@ -98,22 +100,7 @@ public class UnArticuloActivity extends AppCompatActivity
         imagenMarca.setImageBitmap(marca.getImagenBitmap());
         */
 
-        //Texto características artículo
-        /*
-        TextView textoMarca = findViewById(R.id.marca);
-        textoMarca.setText(marca.getNombre());
 
-        TextView textoDescripcion = (TextView) findViewById(R.id.articulo);
-        String moneda = getString(R.string.moneda);
-        String texto = mArticulo.getNombre();
-        textoDescripcion.setText(texto);
-        TextView textoPrecio = (TextView) findViewById(R.id.precio_articulo);
-        String precio = String.format(Locale.ENGLISH,"%.2f",mArticulo.getPrecio())+" "+moneda;
-        textoPrecio.setText(precio);
-
-        TextView texto_ficha_tecnica = (TextView)findViewById(R.id.texto_ficha_tecnica);
-        texto_ficha_tecnica.setPaintFlags(texto_ficha_tecnica.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        */
 
         //Botones de las tallas
         /*
@@ -200,10 +187,29 @@ public class UnArticuloActivity extends AppCompatActivity
             if(_sRespuesta.equals("conectado")) {
                 //Imagen de la marca
                 ImageView imagenMarca = findViewById(R.id.imageViewMarca);
-                imagenMarca.setImageBitmap(_marca.getImagenBitmap());
+                if(_marca.getImagenBitmap() != null)
+                {
+                    imagenMarca.setImageBitmap(_marca.getImagenBitmap());
+                }
+                else
+                {
+                    imagenMarca.setImageResource(R.drawable.ic_file);
+                    imagenMarca.setScaleType(ImageView.ScaleType.CENTER);
+                }
 
-                new cargarColores().execute();
-                //new cargarTallas().execute();
+                //Texto características artículo
+                TextView textoMarca = findViewById(R.id.marca);
+                textoMarca.setText(_marca.getNombre());
+
+                TextView textoDescripcion = findViewById(R.id.articulo);
+                String texto = _Articulo.getNombre();
+                textoDescripcion.setText(texto);
+                TextView textoPrecio = findViewById(R.id.precio_articulo);
+                String precio = String.format("%.2f",_Articulo.getPVP())+" €";
+                textoPrecio.setText(precio);
+
+                //new cargarColores().execute();
+                new cargarTallas().execute(_Articulo.getId());
             }
             else{
                 Toast toast = Toast.makeText(UnArticuloActivity.this,
@@ -285,24 +291,30 @@ public class UnArticuloActivity extends AppCompatActivity
 
         @Override
         protected void onCancelled() {
+            pDialog.dismiss();
+            Toast toast = Toast.makeText(UnArticuloActivity.this,
+                    getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
 
     //clase cargar tallas
-    private class cargarTallas extends AsyncTask<Void, Void, Articulo_TallaAdapter>
+    private class cargarTallas extends AsyncTask<Integer, Void, Articulo_TallaAdapter>
     {
         ProgressDialog pDialog;
         String _sRespuesta;
 
         @Override
-        protected Articulo_TallaAdapter doInBackground(Void... params)
+        protected Articulo_TallaAdapter doInBackground(Integer... params)
         {
+            int iId_Articulo = params[0];
             String sIP_Servidor = ((EasyShop)getApplicationContext()).getIP_Servidor();
             String sPuerto = "5000";
             try {
                 Articulo_TallaAdapter adaptador = new Articulo_TallaAdapter(
-                        Cliente.getTallasArticulo(_Articulo.getId(), sIP_Servidor, sPuerto), _Articulo.getTalla_Es_Numero());
+                        Cliente.getTallasArticulo(iId_Articulo, sIP_Servidor, sPuerto), _Articulo.getTalla_Es_Numero());
                 Talla_Sel = adaptador.getItem(0);
+                return adaptador;
             } catch (Exception e) {
                 _sRespuesta = e.toString();
                 cancel(false);
@@ -328,14 +340,23 @@ public class UnArticuloActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Articulo_TallaAdapter adaptador) {
-
-            despliega_tallas(adaptador);
-
             pDialog.dismiss();
+
+            if(adaptador!= null){
+                despliega_tallas(adaptador);
+                Talla_Sel = adaptador.getItem(0);
+            }
+            else
+            {
+                Toast toast = Toast.makeText(UnArticuloActivity.this,
+                        getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
+                toast.show();
+            }
         }
 
         @Override
         protected void onCancelled() {
+
         }
     }
 
@@ -358,7 +379,7 @@ public class UnArticuloActivity extends AppCompatActivity
         LinearLayoutManager layoutManager= new LinearLayoutManager(UnArticuloActivity.this,LinearLayoutManager.HORIZONTAL, false);
         RecyclerView mRecyclerView = findViewById(R.id.lista_tallas);
         mRecyclerView.setLayoutManager(layoutManager);
-        //adaptador.setOnClickListener(new ClickTalla());
+        adaptador.setOnClickListener(new ClickTalla());
         mRecyclerView.setAdapter(adaptador);
     }
 
@@ -399,7 +420,6 @@ public class UnArticuloActivity extends AppCompatActivity
     */
 
     //Acción al pulsar uno de los colores de la lista
-    /*
     private class ClickTalla implements View.OnClickListener
     {
         @Override
@@ -412,13 +432,12 @@ public class UnArticuloActivity extends AppCompatActivity
                 inactividad.execute(ActividadDetalle.this);
             }
             inactividad.onProgressUpdate(ActividadDetalle.this);
-
+            */
 
             RecyclerView mRecyclerView = findViewById(R.id.lista_tallas);
             int n = mRecyclerView.getChildLayoutPosition(view);
-            String talla = ((Articulo_TallaAdapter)mRecyclerView.getAdapter()).getItem(n);
-            Talla_Sel = (int)(mRecyclerView.getAdapter()).getItemId(n);
-            for(int i=0; i< _Articulo.getTallas().size();i++)
+            Articulo_TallaAdapter adapter = (Articulo_TallaAdapter)mRecyclerView.getAdapter();
+            for(int i=0; i< adapter.getItemCount();i++)
             {
                 View mView = mRecyclerView.getChildAt(i);
                 if(mView!=null) mView.findViewById(R.id.seleccionado).setVisibility(View.INVISIBLE);
@@ -427,9 +446,9 @@ public class UnArticuloActivity extends AppCompatActivity
 
             //actualizar_tallas(talla);
             //mArticulo.setTalla(talla);
+            Talla_Sel = adapter.getItem(n);
         }
     }
-    */
 
     //Acción al pulsar la flecha hacia la izquierda
 
