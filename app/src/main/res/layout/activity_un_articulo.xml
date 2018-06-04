@@ -9,7 +9,12 @@
 
     <include layout="@layout/toolbar"/>
 
-    <LinearLayout
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+        android:id="@+id/datos_articulo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
@@ -274,4 +279,16 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
+        <Button
+            android:id="@+id/button_recargar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableStart="@android:drawable/ic_popup_sync"
+            android:text="@string/recargar"
+            android:onClick="recargar"
+            android:visibility="invisible"/>
+
+    </FrameLayout>
 </LinearLayout>

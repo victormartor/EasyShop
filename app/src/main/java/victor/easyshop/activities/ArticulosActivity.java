@@ -150,6 +150,8 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
                 Toast toast = Toast.makeText(ArticulosActivity.this,
                         getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
                 toast.show();
+                findViewById(R.id.grid).setVisibility(View.INVISIBLE);
+                findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
             }
         }
 
@@ -159,6 +161,8 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
             Toast toast = Toast.makeText(ArticulosActivity.this,
                     getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
             toast.show();
+            findViewById(R.id.grid).setVisibility(View.INVISIBLE);
+            findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
         }
     }
 
@@ -189,6 +193,14 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //MÉTODOS GENERALES
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Cargar datos de nuevo
+    public void recargar(View view){
+        findViewById(R.id.grid).setVisibility(View.VISIBLE);
+        findViewById(R.id.button_recargar).setVisibility(View.INVISIBLE);
+        new cargarArticulos().execute(getIntent().getIntExtra(EXTRA_MARCA, 0),
+                getIntent().getIntExtra(EXTRA_CATEGORIA, 0));
+    }
 
     //Función para personalizar la Toolbar
     private void usarToolbar()

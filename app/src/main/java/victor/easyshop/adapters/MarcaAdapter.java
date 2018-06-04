@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import victor.easyshop.R;
@@ -23,7 +24,7 @@ public class MarcaAdapter extends BaseAdapter
     private Context _context;
     private ArrayList<Marca> _aMarcas;
 
-    public MarcaAdapter(Context context, ArrayList<Marca> aMarcas)
+    public MarcaAdapter(Context context, ArrayList<Marca> aMarcas) throws IOException
     {
         _context = context;
         _aMarcas = aMarcas;

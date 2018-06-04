@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import victor.easyshop.R;
@@ -59,7 +60,7 @@ public class Articulo_ColorAdapter
         }
     }
 
-    public Articulo_ColorAdapter(ArrayList<Articulo_Color> datos) {
+    public Articulo_ColorAdapter(ArrayList<Articulo_Color> datos) throws IOException{
         int n = datos.size();
         this.datos = datos;
         for(Articulo_Color a_c : datos)

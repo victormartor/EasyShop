@@ -36,7 +36,7 @@ public class Imagen
     public void setBitmap(Bitmap bitmap) {this.bitmap = bitmap;}
 
     //Función para cargar la imagen de internet desde la URL
-    public void cargarImagen()
+    public void cargarImagen() throws IOException
     {
         if (bitmap == null) {
             try {
@@ -49,12 +49,12 @@ public class Imagen
 
                 bitmap = BitmapFactory.decodeStream(conn.getInputStream(), new Rect(0, 0, 0, 0), options);
             } catch (IOException e)
-            {e.printStackTrace();}
+            {throw e;}
         }
     }
 
     //Función para cargar la imagen de internet desde la URL en HD
-    public void cargarImagenHD()
+    public void cargarImagenHD() throws IOException
     {
         if (bitmap == null) {
             try {
@@ -63,7 +63,7 @@ public class Imagen
                 conn.connect();
 
                 bitmap = BitmapFactory.decodeStream(conn.getInputStream());
-            } catch (IOException e) {e.printStackTrace();}
+            } catch (IOException e) {throw e;}
         }
     }
 }

@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import victor.easyshop.R;
@@ -23,7 +24,7 @@ public class CategoriaAdapter extends BaseAdapter
     private Context _context;
     private ArrayList<Categoria> _aCategorias;
 
-    public CategoriaAdapter(Context context, ArrayList<Categoria> aCategorias)
+    public CategoriaAdapter(Context context, ArrayList<Categoria> aCategorias) throws IOException
     {
         _context = context;
         _aCategorias = aCategorias;

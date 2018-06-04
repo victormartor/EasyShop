@@ -77,6 +77,7 @@ public class UnArticuloActivity extends AppCompatActivity
         new cargarArticulo().execute(getIntent().getIntExtra(EXTRA_MARCA, 0),
                                    getIntent().getIntExtra(EXTRA_ARTICULO, 0));
         //new cargarTallas().execute(getIntent().getIntExtra(EXTRA_ARTICULO, 0));
+        //new cargarColores().execute(getIntent().getIntExtra(EXTRA_ARTICULO, 0));
         /*
         Marca marca = Marca.getMarcadeLista(ActividadSplash.basedeDatos.getMarcas(),getIntent().getIntExtra(EXTRA_MARCA, 0));
         Categoria categoria = Categoria.getCategoriadeLista(marca.getCategoriasVector(), getIntent().getIntExtra(EXTRA_CATEGORIA, 0));
@@ -207,13 +208,15 @@ public class UnArticuloActivity extends AppCompatActivity
                 String precio = String.format("%.2f",_Articulo.getPVP())+" €";
                 textoPrecio.setText(precio);
 
-                //new cargarColores().execute();
+                //new cargarColores().execute(_Articulo.getId());
                 new cargarTallas().execute(_Articulo.getId());
             }
             else{
                 Toast toast = Toast.makeText(UnArticuloActivity.this,
                         getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
                 toast.show();
+                findViewById(R.id.datos_articulo).setVisibility(View.INVISIBLE);
+                findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
             }
         }
 
@@ -223,24 +226,27 @@ public class UnArticuloActivity extends AppCompatActivity
             Toast toast = Toast.makeText(UnArticuloActivity.this,
                     getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
             toast.show();
+            findViewById(R.id.datos_articulo).setVisibility(View.INVISIBLE);
+            findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
         }
     }
 
     //clase cargar colores
-    private class cargarColores extends AsyncTask<Void, Void, Articulo_ColorAdapter>
+    private class cargarColores extends AsyncTask<Integer, Void, Articulo_ColorAdapter>
     {
         ProgressDialog pDialog;
         String _sRespuesta;
 
         @Override
-        protected Articulo_ColorAdapter doInBackground(Void... params)
+        protected Articulo_ColorAdapter doInBackground(Integer... params)
         {
+            int iId_Articulo = params[0];
             String sIP_Servidor = ((EasyShop)getApplicationContext()).getIP_Servidor();
             String sPuerto = "5000";
             try {
                 Articulo_ColorAdapter adaptador = new Articulo_ColorAdapter(
-                        Cliente.getColoresArticulo(_Articulo.getId(), sIP_Servidor, sPuerto));
-                Color_Sel = adaptador.getItem(0);
+                        Cliente.getColoresArticulo(iId_Articulo, sIP_Servidor, sPuerto));
+                return adaptador;
             } catch (Exception e) {
                 _sRespuesta = e.toString();
                 cancel(false);
@@ -266,26 +272,34 @@ public class UnArticuloActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Articulo_ColorAdapter adaptador) {
-
-            despliega_colores(adaptador);
-
-            ImageView imagenArticulo = findViewById(R.id.imagen_extendida);
-
-            if(Color_Sel.getImagenes().get(0).getBitmap() != null)
-            {
-                imagenArticulo.setImageBitmap(Color_Sel.getImagenes().get(0).getBitmap());
-            }
-            else
-            {
-                imagenArticulo.setImageResource(R.drawable.ic_file);
-                imagenArticulo.setScaleType(ImageView.ScaleType.CENTER);
-            }
-
             pDialog.dismiss();
+            if(adaptador != null){
+                despliega_colores(adaptador);
+                Color_Sel = adaptador.getItem(0);
 
-            despliega_circulos();
+                ImageView imagenArticulo = findViewById(R.id.imagen_extendida);
 
-            new cargarTallas().execute();
+                if(Color_Sel.getImagenes().get(0).getBitmap() != null)
+                {
+                    imagenArticulo.setImageBitmap(Color_Sel.getImagenes().get(0).getBitmap());
+                }
+                else
+                {
+                    imagenArticulo.setImageResource(R.drawable.ic_file);
+                    imagenArticulo.setScaleType(ImageView.ScaleType.CENTER);
+                }
+
+                despliega_circulos();
+                setFlechas();
+            }
+            else{
+                Toast toast = Toast.makeText(UnArticuloActivity.this,
+                        getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
+                toast.show();
+                findViewById(R.id.datos_articulo).setVisibility(View.INVISIBLE);
+                findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
+            }
+            //new cargarTallas().execute();
         }
 
         @Override
@@ -294,6 +308,8 @@ public class UnArticuloActivity extends AppCompatActivity
             Toast toast = Toast.makeText(UnArticuloActivity.this,
                     getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
             toast.show();
+            findViewById(R.id.datos_articulo).setVisibility(View.INVISIBLE);
+            findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
         }
     }
 
@@ -343,12 +359,16 @@ public class UnArticuloActivity extends AppCompatActivity
             if(adaptador!= null){
                 despliega_tallas(adaptador);
                 Talla_Sel = adaptador.getItem(0);
+
+                new cargarColores().execute(_Articulo.getId());
             }
             else
             {
                 Toast toast = Toast.makeText(UnArticuloActivity.this,
                         getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
                 toast.show();
+                findViewById(R.id.datos_articulo).setVisibility(View.INVISIBLE);
+                findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
             }
         }
 
@@ -358,6 +378,8 @@ public class UnArticuloActivity extends AppCompatActivity
             Toast toast = Toast.makeText(UnArticuloActivity.this,
                     getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
             toast.show();
+            findViewById(R.id.datos_articulo).setVisibility(View.INVISIBLE);
+            findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
         }
     }
 
@@ -369,7 +391,7 @@ public class UnArticuloActivity extends AppCompatActivity
         LinearLayoutManager layoutManager= new LinearLayoutManager(UnArticuloActivity.this,LinearLayoutManager.HORIZONTAL, false);
         RecyclerView mRecyclerView = findViewById(R.id.lista_colores);
         mRecyclerView.setLayoutManager(layoutManager);
-        //adaptador.setOnClickListener(new ClickColor());
+        adaptador.setOnClickListener(new ClickColor());
         mRecyclerView.setAdapter(adaptador);
     }
 
@@ -385,7 +407,6 @@ public class UnArticuloActivity extends AppCompatActivity
     }
 
     //Acción al pulsar uno de los colores de la lista
-    /*
     private class ClickColor implements View.OnClickListener
     {
         @Override
@@ -398,13 +419,14 @@ public class UnArticuloActivity extends AppCompatActivity
                 inactividad.execute(ActividadDetalle.this);
             }
             inactividad.onProgressUpdate(ActividadDetalle.this);
+            */
 
 
             RecyclerView mRecyclerView = findViewById(R.id.lista_colores);
-            numColor = mRecyclerView.getChildLayoutPosition(view);
-            Articulo_Color articulo_color = ((Articulo_ColorAdapter)mRecyclerView.getAdapter()).getItem(numColor);
-            Color_Sel = articulo_color.getId();
-            for(int i=0; i< _Articulo.getColores().size();i++)
+            int numColor = mRecyclerView.getChildLayoutPosition(view);
+            Articulo_ColorAdapter adapter = (Articulo_ColorAdapter)mRecyclerView.getAdapter();
+            Color_Sel = adapter.getItem(numColor);
+            for(int i=0; i< adapter.getItemCount();i++)
             {
                 View mView = mRecyclerView.getChildAt(i);
                 if(mView!=null) mView.findViewById(R.id.seleccionado).setVisibility(View.INVISIBLE);
@@ -412,13 +434,12 @@ public class UnArticuloActivity extends AppCompatActivity
             mRecyclerView.findContainingItemView(view).findViewById(R.id.seleccionado).setVisibility(View.VISIBLE);
 
             ImageView imagenColor = findViewById(R.id.imagen_extendida);
-            imagenColor.setImageBitmap(articulo_color.getImagenes().get(0).getBitmap());
+            imagenColor.setImageBitmap(Color_Sel.getImagenes().get(0).getBitmap());
             numImagen=0;
             setFlechas();
             despliega_circulos();
         }
     }
-    */
 
     //Acción al pulsar uno de los colores de la lista
     private class ClickTalla implements View.OnClickListener
@@ -455,9 +476,8 @@ public class UnArticuloActivity extends AppCompatActivity
 
     public void anteriorImagen(View view)
     {
-        /*
         RecyclerView mRecyclerView = findViewById(R.id.lista_colores);
-        Articulo_Color articulo_color = ((Articulo_ColorAdapter)mRecyclerView.getAdapter()).getItem(numColor);
+        //Articulo_Color articulo_color = ((Articulo_ColorAdapter)mRecyclerView.getAdapter()).getItem(numColor);
 
         if(numImagen > 0)
         {
@@ -469,25 +489,24 @@ public class UnArticuloActivity extends AppCompatActivity
             }
 
             inactividad.onProgressUpdate(this);
+            */
 
             numImagen--;
             ImageView imagenArticulo = findViewById(R.id.imagen_extendida);
             //imagenArticulo.setImageBitmap(mArticulo.getColor().getImagenBitMap(numImagen));
-            imagenArticulo.setImageBitmap(articulo_color.getImagenes().get(numImagen).getBitmap());
+            imagenArticulo.setImageBitmap(Color_Sel.getImagenes().get(numImagen).getBitmap());
 
             setFlechas();
             actualizar_circulos();
         }
-        */
     }
 
     //Acción al pulsar la flecha hacia la derecha
     public void siguienteImagen(View view)
     {
-        /*
         RecyclerView mRecyclerView = findViewById(R.id.lista_colores);
-        Articulo_Color articulo_color = ((Articulo_ColorAdapter)mRecyclerView.getAdapter()).getItem(numColor);
-        if(numImagen < articulo_color.getImagenes().size()-1)
+        //Articulo_Color articulo_color = ((Articulo_ColorAdapter)mRecyclerView.getAdapter()).getItem(numColor);
+        if(numImagen < Color_Sel.getImagenes().size()-1)
         {
             /*
             if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
@@ -496,16 +515,17 @@ public class UnArticuloActivity extends AppCompatActivity
                 inactividad.execute(this);
             }
             inactividad.onProgressUpdate(this);
+            */
 
             numImagen++;
             ImageView imagenArticulo = findViewById(R.id.imagen_extendida);
             //imagenArticulo.setImageBitmap(mArticulo.getColor().getImagenBitMap(numImagen));
-            imagenArticulo.setImageBitmap(articulo_color.getImagenes().get(numImagen).getBitmap());
+            imagenArticulo.setImageBitmap(Color_Sel.getImagenes().get(numImagen).getBitmap());
 
             setFlechas();
             actualizar_circulos();
         }
-        */
+
     }
 
     //desplegar circulos
@@ -520,21 +540,19 @@ public class UnArticuloActivity extends AppCompatActivity
     //actualizar circulos
     public void actualizar_circulos()
     {
-        /*
         RecyclerView circulos = findViewById(R.id.lista_circulos);
-        for(int i=0; i< mArticulo.getColor().getImagenes().length;i++)
+        for(int i=0; i< Color_Sel.getImagenes().size();i++)
         {
             View mView = circulos.getChildAt(i);
             if(mView!=null)
             {
-                ImageView img = (ImageView)mView.findViewById(R.id.imagen);
+                ImageView img = mView.findViewById(R.id.imagen);
                 img.setImageResource(R.drawable.ic_circle_off);
             }
         }
         View mView = circulos.getChildAt(numImagen);
-        ImageView img = (ImageView)mView.findViewById(R.id.imagen);
+        ImageView img = mView.findViewById(R.id.imagen);
         img.setImageResource(R.drawable.ic_circle_on);
-        */
     }
 
     //Funcion para hacer visibles las flechas o no según el artículo
@@ -694,6 +712,15 @@ public class UnArticuloActivity extends AppCompatActivity
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //MÉTODOS GENERALES
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Cargar datos de nuevo
+    public void recargar(View view){
+        findViewById(R.id.datos_articulo).setVisibility(View.VISIBLE);
+        findViewById(R.id.button_recargar).setVisibility(View.INVISIBLE);
+        new cargarArticulo().execute(getIntent().getIntExtra(EXTRA_MARCA, 0),
+                getIntent().getIntExtra(EXTRA_ARTICULO, 0));
+        //new cargarColores().execute(getIntent().getIntExtra(EXTRA_ARTICULO, 0));
+    }
 
     //Función para personalizar la Toolbar
     private void usarToolbar()

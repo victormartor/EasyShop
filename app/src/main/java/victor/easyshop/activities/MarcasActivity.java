@@ -128,6 +128,8 @@ public class MarcasActivity extends AppCompatActivity implements AdapterView.OnI
                 Toast toast = Toast.makeText(MarcasActivity.this,
                         getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
                 toast.show();
+                findViewById(R.id.grid).setVisibility(View.INVISIBLE);
+                findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
             }
         }
 
@@ -137,6 +139,8 @@ public class MarcasActivity extends AppCompatActivity implements AdapterView.OnI
             Toast toast = Toast.makeText(MarcasActivity.this,
                     getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
             toast.show();
+            findViewById(R.id.grid).setVisibility(View.INVISIBLE);
+            findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
         }
     }
 
@@ -164,6 +168,13 @@ public class MarcasActivity extends AppCompatActivity implements AdapterView.OnI
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //MÉTODOS GENERALES
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Cargar datos de nuevo
+    public void recargar(View view){
+        findViewById(R.id.grid).setVisibility(View.VISIBLE);
+        findViewById(R.id.button_recargar).setVisibility(View.INVISIBLE);
+        new cargarMarcas().execute();
+    }
 
     //Acción al pulsar el icono de la marca (en esta actividad no hace nada pero hay que declararlo igualmente)
     public void iraMarca(View view) {}

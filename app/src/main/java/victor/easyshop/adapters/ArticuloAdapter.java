@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import victor.easyshop.R;
@@ -23,7 +24,7 @@ public class ArticuloAdapter extends BaseAdapter
     private Context _context;
     private ArrayList<Articulo> _aArticulos;
 
-    public ArticuloAdapter(Context context, ArrayList<Articulo> aArticulos)
+    public ArticuloAdapter(Context context, ArrayList<Articulo> aArticulos) throws IOException
     {
         _context = context;
         _aArticulos = aArticulos;

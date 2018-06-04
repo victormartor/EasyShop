@@ -194,6 +194,7 @@ public class Cliente
             while(!sRespuesta.equals("FinImagenes")){
                 Imagen imagen = new Imagen("http://"+sIP_Servidor+"/EasyShop/Imagenes/"+sRespuesta);
                 aImagenes.add(imagen);
+                sRespuesta = socketStream.recibeMensaje();
             }
             Articulo_Color color = new Articulo_Color(id, nombre, aImagenes);
 
