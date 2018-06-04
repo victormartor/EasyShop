@@ -58,8 +58,7 @@ public class UnArticuloActivity extends AppCompatActivity
 
     //posicion de la imagen en la galería
     int numImagen;
-
-    //int numTalla;
+    int numTalla;
     //int numColor;
 
     @Override
@@ -74,7 +73,7 @@ public class UnArticuloActivity extends AppCompatActivity
         //Inicializar atributos
         numImagen = 0;
         //numColor = 0;
-        //numTalla = 0;
+        numTalla = 0;
         new cargarArticulo().execute(getIntent().getIntExtra(EXTRA_MARCA, 0),
                                    getIntent().getIntExtra(EXTRA_ARTICULO, 0));
         //new cargarTallas().execute(getIntent().getIntExtra(EXTRA_ARTICULO, 0));
@@ -313,7 +312,6 @@ public class UnArticuloActivity extends AppCompatActivity
             try {
                 Articulo_TallaAdapter adaptador = new Articulo_TallaAdapter(
                         Cliente.getTallasArticulo(iId_Articulo, sIP_Servidor, sPuerto), _Articulo.getTalla_Es_Numero());
-                Talla_Sel = adaptador.getItem(0);
                 return adaptador;
             } catch (Exception e) {
                 _sRespuesta = e.toString();
@@ -356,7 +354,10 @@ public class UnArticuloActivity extends AppCompatActivity
 
         @Override
         protected void onCancelled() {
-
+            pDialog.dismiss();
+            Toast toast = Toast.makeText(UnArticuloActivity.this,
+                    getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
 
@@ -379,7 +380,7 @@ public class UnArticuloActivity extends AppCompatActivity
         LinearLayoutManager layoutManager= new LinearLayoutManager(UnArticuloActivity.this,LinearLayoutManager.HORIZONTAL, false);
         RecyclerView mRecyclerView = findViewById(R.id.lista_tallas);
         mRecyclerView.setLayoutManager(layoutManager);
-        adaptador.setOnClickListener(new ClickTalla());
+        if(!_Articulo.getTalla_Es_Numero()) adaptador.setOnClickListener(new ClickTalla());
         mRecyclerView.setAdapter(adaptador);
     }
 
@@ -572,49 +573,55 @@ public class UnArticuloActivity extends AppCompatActivity
     //Acción al pulsar el boton menos en la talla
     public void talla_menos(View view)
     {
-        /*
+        RecyclerView mRecyclerView = findViewById(R.id.lista_tallas);
+        Articulo_TallaAdapter adapter = (Articulo_TallaAdapter)mRecyclerView.getAdapter();
         if(numTalla > 0)
         {
+            /*
             if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
             {
                 inactividad = new Inactividad();
                 inactividad.execute(this);
             }
             inactividad.onProgressUpdate(this);
+            */
             numTalla--;
+            Talla_Sel = adapter.getItem(numTalla);
 
             //actualizar_tallas(mArticulo.getTallas().get(numTalla));
-            RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.lista_tallas);
-            TextView textView = (TextView) mRecyclerView.getChildAt(0).findViewById(R.id.numero_talla);
-            textView.setText(mArticulo.getTallas().get(numTalla));
+            //RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.lista_tallas);
+            TextView textView = mRecyclerView.getChildAt(0).findViewById(R.id.numero_talla);
+            textView.setText(Talla_Sel.getNombre());
 
-            mArticulo.setTalla(mArticulo.getTallas().get(numTalla));
+            //mArticulo.setTalla(mArticulo.getTallas().get(numTalla));
         }
-        */
     }
 
     //Acción al pulsar el boton mas en la talla
     public void talla_mas(View view)
     {
-        /*
-        if(numTalla < mArticulo.getTallas().size()-1)
+        RecyclerView mRecyclerView = findViewById(R.id.lista_tallas);
+        Articulo_TallaAdapter adapter = (Articulo_TallaAdapter)mRecyclerView.getAdapter();
+        if(numTalla < adapter.getArraySize()-1)
         {
+            /*
             if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
             {
                 inactividad = new Inactividad();
                 inactividad.execute(this);
             }
             inactividad.onProgressUpdate(this);
+            */
             numTalla++;
+            Talla_Sel = adapter.getItem(numTalla);
 
             //actualizar_tallas(mArticulo.getTallas().get(numTalla));
-            RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.lista_tallas);
-            TextView textView = (TextView) mRecyclerView.getChildAt(0).findViewById(R.id.numero_talla);
-            textView.setText(mArticulo.getTallas().get(numTalla));
+            //RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.lista_tallas);
+            TextView textView = mRecyclerView.getChildAt(0).findViewById(R.id.numero_talla);
+            textView.setText(Talla_Sel.getNombre());
 
-            mArticulo.setTalla(mArticulo.getTallas().get(numTalla));
+            //mArticulo.setTalla(mArticulo.getTallas().get(numTalla));
         }
-        */
     }
 
     //NAVEGAR A OTRA ACTIVIDAD/////////////////////////

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -146,6 +147,8 @@ public class CategoriasActivity extends AppCompatActivity implements AdapterView
                 Toast toast = Toast.makeText(CategoriasActivity.this,
                         getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
                 toast.show();
+                findViewById(R.id.grid).setVisibility(View.INVISIBLE);
+                findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
             }
         }
 
@@ -155,6 +158,8 @@ public class CategoriasActivity extends AppCompatActivity implements AdapterView
             Toast toast = Toast.makeText(CategoriasActivity.this,
                     getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
             toast.show();
+            findViewById(R.id.grid).setVisibility(View.INVISIBLE);
+            findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
         }
     }
 
@@ -184,6 +189,13 @@ public class CategoriasActivity extends AppCompatActivity implements AdapterView
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //MÉTODOS GENERALES
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Cargar datos de nuevo
+    public void recargar(View view){
+        findViewById(R.id.grid).setVisibility(View.VISIBLE);
+        findViewById(R.id.button_recargar).setVisibility(View.INVISIBLE);
+        new cargarCategorias().execute(getIntent().getIntExtra(EXTRA_MARCA, 0));
+    }
 
     //Función para personalizar la Toolbar
     private void usarToolbar()

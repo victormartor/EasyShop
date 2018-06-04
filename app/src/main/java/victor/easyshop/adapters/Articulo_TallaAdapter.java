@@ -95,7 +95,8 @@ public class Articulo_TallaAdapter
 
     @Override
     public int getItemCount() {
-        return datos.size();
+        if(!_bTalla_Es_Numero) return datos.size();
+        else return 1;
     }
 
     public void setOnClickListener(View.OnClickListener listener) {
@@ -112,4 +113,5 @@ public class Articulo_TallaAdapter
     public Articulo_Talla getItem(int position) {
         return datos.get(position);
     }
+    public int getArraySize() {return datos.size();}
 }

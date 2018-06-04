@@ -10,15 +10,32 @@
 
     <include layout="@layout/toolbar"/>
 
-    <GridView
-        android:id="@+id/grid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        android:horizontalSpacing="@dimen/espacio_grilla"
-        android:numColumns="2"
-        android:padding="5dp"
-        android:verticalSpacing="@dimen/espacio_grilla"
-        />
+        <GridView
+            android:id="@+id/grid"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:horizontalSpacing="@dimen/espacio_grilla"
+            android:numColumns="2"
+            android:padding="5dp"
+            android:verticalSpacing="@dimen/espacio_grilla"
+            />
+
+        <Button
+            android:id="@+id/button_recargar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableStart="@android:drawable/ic_popup_sync"
+            android:text="@string/recargar"
+            android:onClick="recargar"
+            android:visibility="invisible"/>
+
+    </FrameLayout>
+
 
 </LinearLayout>
