@@ -653,10 +653,10 @@ public class UnArticuloActivity extends AppCompatActivity
             inactividad = new Inactividad();
             inactividad.execute(this);
         }
-        Intent intent = new Intent(this, ActividadMasDetalle.class);
-        intent.putExtra(ActividadMasDetalle.EXTRA_ARTICULO, mArticulo.getColor().getImagenUrl(numImagen));
-        startActivityForResult(intent,0);
         */
+        Intent intent = new Intent(this, ImagenActivity.class);
+        intent.putExtra(ImagenActivity.EXTRA_IMAGEN, Color_Sel.getImagenes().get(numImagen).getUrl());
+        startActivity(intent);
     }
 
     //Acción al pulsar en el botón de añadir al carrito

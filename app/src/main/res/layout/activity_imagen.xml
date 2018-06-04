@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical"
+    android:background="@color/background_floating_material_light">
+
+    <!--
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+    -->
+
+    <victor.easyshop.clases.TouchImageView
+        android:id="@+id/imagen_extendida"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_gravity="end|bottom"
+        android:layout_margin="30dp"
+
+        android:onClick="volver"
+        android:src="@drawable/ic_back"
+        app:backgroundTint="@android:color/black" />
+
+    <Button
+        android:id="@+id/button_recargar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawableStart="@android:drawable/ic_popup_sync"
+        android:text="@string/recargar"
+        android:onClick="recargar"
+        android:visibility="invisible"/>
+</FrameLayout>
