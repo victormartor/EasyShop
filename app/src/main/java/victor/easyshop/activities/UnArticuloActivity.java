@@ -1,9 +1,11 @@
 package victor.easyshop.activities;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -668,6 +670,7 @@ public class UnArticuloActivity extends AppCompatActivity
             inactividad = new Inactividad();
             inactividad.execute(this);
         }
+        */
 
         //Insertar cuadro de diálogo para confirmación
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
@@ -680,22 +683,23 @@ public class UnArticuloActivity extends AppCompatActivity
         {
             public void onClick(DialogInterface dialogo1, int id)
             {
-                Intent intent = new Intent(ActividadDetalle.this, ActividadCombinaciones.class);
-                intent.putExtra(ActividadCombinaciones.EXTRA_ARTICULO, mArticulo.getId());
-                intent.putExtra(ActividadCombinaciones.EXTRA_CATEGORIA, mArticulo.getCategoria().getId());
-                intent.putExtra(ActividadCombinaciones.EXTRA_MARCA, mArticulo.getMarca().getId());
-
+                Intent intent = new Intent(UnArticuloActivity.this, CombinacionesActivity.class);
+                intent.putExtra(CombinacionesActivity.EXTRA_ARTICULO, _Articulo.getId());
+                intent.putExtra(CombinacionesActivity.EXTRA_CATEGORIA, getIntent().getIntExtra(EXTRA_CATEGORIA, 0));
+                intent.putExtra(CombinacionesActivity.EXTRA_MARCA, getIntent().getIntExtra(EXTRA_MARCA, 0));
+                /*
                 Color[] colores = mArticulo.getVectorColores();
                 int n = 0;
                 for (int i=0;i<colores.length;i++)
                 {
                     if (colores[i].getId() == mArticulo.getColor().getId()) n = i;
                 }
+                */
 
-                intent.putExtra(ActividadCombinaciones.EXTRA_COLOR, n);
-                intent.putExtra(ActividadCombinaciones.EXTRA_TALLA, mArticulo.getTalla());
+                intent.putExtra(CombinacionesActivity.EXTRA_COLOR, Color_Sel.getId());
+                intent.putExtra(CombinacionesActivity.EXTRA_TALLA, Talla_Sel.getId());
 
-                carrito.insertarArticulo(mArticulo);
+                //carrito.insertarArticulo(mArticulo);
                 startActivity(intent);
                 finish();
             }
@@ -706,7 +710,7 @@ public class UnArticuloActivity extends AppCompatActivity
         });
 
         dialogo.show();
-        */
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -822,26 +826,26 @@ public class UnArticuloActivity extends AppCompatActivity
         }
         */
 
-        /*
+
         if (getIntent().getBooleanExtra(EXTRA_COMBINACIONES,false))
         {
-            Intent intent = new Intent(ActividadDetalle.this, ActividadCombinaciones.class);
-            intent.putExtra(ActividadCombinaciones.EXTRA_ARTICULO, getIntent().getIntExtra(EXTRA_ARTICULO_ANTERIOR,0));
-            intent.putExtra(ActividadCombinaciones.EXTRA_MARCA, getIntent().getIntExtra(EXTRA_MARCA_ANTERIOR,0));
-            intent.putExtra(ActividadCombinaciones.EXTRA_CATEGORIA, getIntent().getIntExtra(EXTRA_CATEGORIA_ANTERIOR,0));
-            intent.putExtra(ActividadCombinaciones.EXTRA_TALLA, getIntent().getIntExtra(EXTRA_TALLA_ANTERIOR,0));
-            intent.putExtra(ActividadCombinaciones.EXTRA_COLOR, getIntent().getIntExtra(EXTRA_COLOR_ANTERIOR,0));
+            Intent intent = new Intent(UnArticuloActivity.this, CombinacionesActivity.class);
+            intent.putExtra(CombinacionesActivity.EXTRA_ARTICULO, getIntent().getIntExtra(EXTRA_ARTICULO_ANTERIOR,0));
+            intent.putExtra(CombinacionesActivity.EXTRA_MARCA, getIntent().getIntExtra(EXTRA_MARCA_ANTERIOR,0));
+            intent.putExtra(CombinacionesActivity.EXTRA_CATEGORIA, getIntent().getIntExtra(EXTRA_CATEGORIA_ANTERIOR,0));
+            intent.putExtra(CombinacionesActivity.EXTRA_TALLA, getIntent().getIntExtra(EXTRA_TALLA_ANTERIOR,0));
+            intent.putExtra(CombinacionesActivity.EXTRA_COLOR, getIntent().getIntExtra(EXTRA_COLOR_ANTERIOR,0));
             startActivity(intent);
         }
         else
         {
-        */
+
             Intent intent = new Intent(this, ArticulosActivity.class);
             intent.putExtra(ArticulosActivity.EXTRA_CATEGORIA, getIntent().getIntExtra(EXTRA_CATEGORIA, 0));
             intent.putExtra(ArticulosActivity.EXTRA_MARCA, getIntent().getIntExtra(EXTRA_MARCA, 0));
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-        //}
+        }
         finish();
     }
 }

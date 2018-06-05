@@ -15,6 +15,7 @@ public class Articulo
     private String _sNombre;
     private double _dPVP;
     private boolean _bTalla_Es_Numero;
+    private int _iId_Marca;
 
     private Imagen _imagen;
 
@@ -22,6 +23,12 @@ public class Articulo
     public Articulo(int iId, double dPVP){
         _iId = iId;
         _dPVP = dPVP;
+    }
+
+    //Constructor para obtener lo minimo para la lista de combinaciones
+    public Articulo(int iId, int iId_Marca){
+        _iId = iId;
+        _iId_Marca = iId_Marca;
     }
 
     //Constructor completo
@@ -39,6 +46,7 @@ public class Articulo
     public String getNombre() { return _sNombre; }
     public double getPVP() { return _dPVP; }
     public boolean getTalla_Es_Numero() { return _bTalla_Es_Numero; }
+    public int getId_Marca() {return _iId_Marca;}
 
     public Imagen getImagen() { return _imagen; }
     public Bitmap getImagenBitmap(){return _imagen.getBitmap();}

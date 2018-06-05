@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:background="@android:color/white"
+    android:orientation="horizontal">
+
+    <include layout="@layout/toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_bag" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_tick"
+                    android:padding="5dp"
+                    android:layout_marginTop="5dp"/>
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/combinaciones"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/foreground_text"/>
+
+        </LinearLayout>
+
+
+
+        <!--
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="?attr/colorButtonNormal"/>
+            -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/lista_combinaciones"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="50"
+                android:paddingTop="20dp"/>
+
+            <Button
+                android:id="@+id/button_recargar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableStart="@android:drawable/ic_popup_sync"
+                android:text="@string/recargar"
+                android:onClick="recargar"
+                android:visibility="invisible"/>
+        </FrameLayout>
+
+
+    </LinearLayout>
+</LinearLayout>

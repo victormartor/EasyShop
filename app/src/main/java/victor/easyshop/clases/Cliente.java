@@ -225,4 +225,30 @@ public class Cliente
         socketStream.close();
         return aTallas;
     }
+
+    public static ArrayList<Articulo> getCombinacionesArticulo(Integer iId_Articulo, String sIP_Servidor, String sPuerto) throws IOException {
+        String sRespuesta = null;
+        int iPuerto = Integer.parseInt(sPuerto);
+        SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
+        socketStream.setSoTimeout(5000);
+        socketStream.enviaMensaje("combinaciones");
+        socketStream.enviaMensaje(iId_Articulo.toString());
+
+        ArrayList<Articulo> aComb = new ArrayList<>();
+        sRespuesta = socketStream.recibeMensaje();
+        while(!sRespuesta.equals("FinComb")){
+            String[] sArticulo = sRespuesta.split(":");
+            Articulo articulo = new Articulo(Integer.parseInt(sArticulo[0]),Integer.parseInt(sArticulo[5]));
+
+            sRespuesta = socketStream.recibeMensaje();
+            Imagen imagen = new Imagen("http://"+sIP_Servidor+"/EasyShop/Imagenes/"+sRespuesta);
+            articulo.setImagen(imagen);
+
+            aComb.add(articulo);
+            sRespuesta = socketStream.recibeMensaje();;
+        }
+        socketStream.close();
+        System.out.println("combinaciones recibidas");
+        return aComb;
+    }
 } // fin de class

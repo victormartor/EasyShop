@@ -35,7 +35,8 @@
             android:screenOrientation="sensorLandscape" />
         <activity android:name=".activities.ArticulosActivity" />
         <activity android:name=".activities.UnArticuloActivity" />
-        <activity android:name=".activities.ImagenActivity"></activity>
+        <activity android:name=".activities.ImagenActivity" />
+        <activity android:name=".activities.CombinacionesActivity"></activity>
     </application>
 
 </manifest>
