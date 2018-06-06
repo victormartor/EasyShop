@@ -24,6 +24,7 @@ import victor.easyshop.adapters.CirculoAdapter;
 import victor.easyshop.clases.Articulo;
 import victor.easyshop.clases.Articulo_Color;
 import victor.easyshop.clases.Articulo_Talla;
+import victor.easyshop.clases.Carrito;
 import victor.easyshop.clases.Cliente;
 import victor.easyshop.clases.Marca;
 import victor.easyshop.data.EasyShop;
@@ -54,6 +55,7 @@ public class UnArticuloActivity extends AppCompatActivity
     public static final String EXTRA_COLOR_ANTERIOR = "color_anterior";
     public static final String EXTRA_TALLA_ANTERIOR = "talla_anterior";
 
+    private Marca _marca;
     private Articulo _Articulo;
     private Articulo_Color Color_Sel;
     private Articulo_Talla Talla_Sel;
@@ -120,6 +122,7 @@ public class UnArticuloActivity extends AppCompatActivity
         //setFlechas();
 
         //Carrito
+        actualizar_carrito();
         /*
         TextView num_art_carrito = (TextView)findViewById(R.id.numero_art_carrito);
         int n = carrito.getArticulos().size();
@@ -143,7 +146,6 @@ public class UnArticuloActivity extends AppCompatActivity
     {
         ProgressDialog _pDialog;
         String _sRespuesta;
-        private Marca _marca;
 
         @Override
         protected Void doInBackground(Integer... params)
@@ -699,6 +701,22 @@ public class UnArticuloActivity extends AppCompatActivity
                 intent.putExtra(CombinacionesActivity.EXTRA_COLOR, Color_Sel.getId());
                 intent.putExtra(CombinacionesActivity.EXTRA_TALLA, Talla_Sel.getId());
 
+                /*
+                (int iId_Articulo, String sNombre, double dPVP, int iId_Color, String sColor,
+                               int iId_Talla, String sTalla, String sImagenURL,
+                               int iId_Marca, String sMarca, int iId_Categoria)
+                 */
+                Carrito carrito = ((EasyShop)UnArticuloActivity.this.getApplication()).getCarrito();
+                carrito.insertarArticulo(
+                        _Articulo.getId(), _Articulo.getNombre(), _Articulo.getPVP(),
+                        Color_Sel.getId(), Color_Sel.getNombre(),
+                        Talla_Sel.getId(), Talla_Sel.getNombre(),
+                        Color_Sel.getImagenes().get(0).getUrl(),
+                        _marca.getId(),
+                        _marca.getNombre(),
+                        getIntent().getIntExtra(EXTRA_CATEGORIA, 0)
+                );
+
                 //carrito.insertarArticulo(mArticulo);
                 startActivity(intent);
                 finish();
@@ -724,6 +742,18 @@ public class UnArticuloActivity extends AppCompatActivity
         new cargarArticulo().execute(getIntent().getIntExtra(EXTRA_MARCA, 0),
                 getIntent().getIntExtra(EXTRA_ARTICULO, 0));
         //new cargarColores().execute(getIntent().getIntExtra(EXTRA_ARTICULO, 0));
+    }
+
+    //Actualizar carrito
+    private void actualizar_carrito(){
+        TextView num_art_carrito = findViewById(R.id.numero_art_carrito);
+        int n = ((EasyShop)this.getApplication()).getCarrito().getNumArticulos();
+        if (n > 0)
+        {
+            num_art_carrito.setVisibility(View.VISIBLE);
+            num_art_carrito.setText(String.format("%d",n));
+        }
+        else num_art_carrito.setVisibility(View.INVISIBLE);
     }
 
     //Función para personalizar la Toolbar

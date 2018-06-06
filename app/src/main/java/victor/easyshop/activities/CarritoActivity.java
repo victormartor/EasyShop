@@ -1,8 +1,10 @@
 package victor.easyshop.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,10 +12,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.IOException;
 
 import victor.easyshop.R;
+import victor.easyshop.adapters.CarritoAdapter;
+import victor.easyshop.clases.Carrito;
+import victor.easyshop.data.EasyShop;
 
 /*
  * Autor: Víctor Martín Torres - 30/8/17
@@ -39,7 +48,7 @@ public class CarritoActivity extends AppCompatActivity
         pulsar_carrito();
 
         //Actualizar lista de artículos para mostrar según los que haya en el carrito
-        //actualizarLista();
+        actualizarLista();
 
         //Inactividad
         //if(inactividad != null) inactividad.onProgressUpdate(this);
@@ -56,20 +65,24 @@ public class CarritoActivity extends AppCompatActivity
     //CARGAR DATOS//////////////////////////////////////
 
     //cargar imagenes de los artículos
-    /*
-    private class cargarImagenesCarro extends AsyncTask<Void, Void, Void>
+    private class cargarImagenesCarro extends AsyncTask<Carrito, Void, Carrito>
     {
         ProgressDialog pDialog;
+        String _sRespuesta;
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Carrito doInBackground(Carrito... params) {
 
-            for (Carro.ArticuloCarrito i : carrito.getArticulos())
-            {
-                i.cargarImagen();
+            Carrito carrito = params[0];
+            try {
+                for (Carrito.ArticuloCarrito i : carrito.getArticulos()) {
+                    i.cargarImagen();
+                }
+            }catch(IOException ex){
+                _sRespuesta = ex.toString();
             }
 
-            return null;
+            return carrito;
         }
 
         @Override
@@ -80,7 +93,7 @@ public class CarritoActivity extends AppCompatActivity
         @Override
         protected void onPreExecute() {
 
-            pDialog = new ProgressDialog(ActividadCarrito.this);
+            pDialog = new ProgressDialog(CarritoActivity.this);
             pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             pDialog.setMessage(getString(R.string.cargando));
             pDialog.setCancelable(false);
@@ -89,43 +102,48 @@ public class CarritoActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onPostExecute(Void resultado) {
-
-            GridView gridView = (GridView) findViewById(R.id.grid);
-            AdaptadorDeCarro adaptador = new AdaptadorDeCarro(ActividadCarrito.this, ActividadPrincipal.carrito.getArticulos());
-            gridView.setAdapter(adaptador);
+        protected void onPostExecute(Carrito carrito) {
             pDialog.dismiss();
+
+            GridView gridView = findViewById(R.id.grid);
+            CarritoAdapter adaptador = new CarritoAdapter(CarritoActivity.this,
+                    carrito.getArticulos());
+            gridView.setAdapter(adaptador);
+
         }
 
         @Override
         protected void onCancelled() {
+            Toast toast = Toast.makeText(CarritoActivity.this,
+                    getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
+            toast.show();
+            findViewById(R.id.grid).setVisibility(View.INVISIBLE);
+            findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
         }
     }
-    */
 
     //Función para actualizar la lista de artículos
-    /*
     private void actualizarLista()
     {
         //TICKET
         //Columna con la lista de artículos y su referencia
-        TextView textoArticulos = (TextView) findViewById(R.id.carrito);
+        TextView textoArticulos = findViewById(R.id.carrito);
         String listaArticulos = "";
-        String moneda = getString(R.string.moneda);
 
         //Columna con la lista de precios
-        TextView textoPrecios = (TextView) findViewById(R.id.carritoPrecios);
+        TextView textoPrecios = findViewById(R.id.carritoPrecios);
         String listaPrecios = "";
         float total = 0;
 
-        if(!ActividadPrincipal.carrito.vacio())
+        Carrito carrito = ((EasyShop)this.getApplication()).getCarrito();
+        if(!carrito.vacio())
         {
-            for(Carro.ArticuloCarrito a : ActividadPrincipal.carrito.getArticulos())
+            for(Carrito.ArticuloCarrito a : carrito.getArticulos())
             {
-                listaArticulos = listaArticulos+a.getReferencia()+
-                        "-"+a.getColor().hashCode()+"-"+a.getTalla()+"\n\n";
-                listaPrecios = listaPrecios+String.format(Locale.ENGLISH,"%.2f",a.getPrecio())+" "+moneda+"\n\n";
-                total += a.getPrecio();
+                listaArticulos = listaArticulos+a.getId_Articulo()+
+                        "-"+a.getId_Color()+"-"+a.getId_Talla()+"\n\n";
+                listaPrecios = listaPrecios+String.format("%.2f",a.getPVP())+" €\n\n";
+                total += a.getPVP();
             }
 
             textoArticulos.setText(listaArticulos);
@@ -138,18 +156,16 @@ public class CarritoActivity extends AppCompatActivity
         }
 
         //Total
-        String texto = String.format(Locale.ENGLISH,"%.2f",total)+" "+moneda;
-        TextView precioTotal = (TextView) findViewById(R.id.totalPrecio);
+        String texto = String.format("%.2f",total)+" €";
+        TextView precioTotal = findViewById(R.id.totalPrecio);
         precioTotal.setText(texto);
 
         //GRIDVIEW
-        cargarImagenesCarro tarea = new cargarImagenesCarro();
-        tarea.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new cargarImagenesCarro().execute(carrito);
 
         //Carrito
         actualizar_carrito();
     }
-    */
 
     //MODIFICAR TOOLBAR
     private void pulsar_carrito(){
@@ -209,9 +225,9 @@ public class CarritoActivity extends AppCompatActivity
     }
 
     //Acción para eliminar un artículo de la lista
-    /*
     public void eliminar(View view)
     {
+        /*
         if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
         {
             inactividad = new Inactividad();
@@ -246,8 +262,8 @@ public class CarritoActivity extends AppCompatActivity
         });
 
         dialogo.show();
+        */
     }
-    */
 
     //Accion al pulsar el botón de comprar y pagar en caja
     public void comprar(View view)
@@ -399,9 +415,9 @@ public class CarritoActivity extends AppCompatActivity
     //NAVEGAR A OTRA ACTIVIDAD/////////////////////////
 
     //Acción al pulsar la imagen del artículo dentro de la lista
-    /*
     public void ampliar(View view)
     {
+        /*
         if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
         {
             inactividad = new Inactividad();
@@ -414,13 +430,14 @@ public class CarritoActivity extends AppCompatActivity
         intent.putExtra(ActividadMasDetalle.EXTRA_ARTICULO, item.getImagenUrl());
 
         startActivityForResult(intent,0);
+        */
     }
-    */
+
 
     //Acción al pulsar el texto del articulo del carrito
-    /*
     public void iraArticulo(View view)
     {
+        /*
         GridView gridView = (GridView) findViewById(R.id.grid);
         Carro.ArticuloCarrito item = (Carro.ArticuloCarrito) gridView.getItemAtPosition(gridView.getPositionForView(view));
 
@@ -436,8 +453,9 @@ public class CarritoActivity extends AppCompatActivity
         }
         startActivity(intent);
         finish();
+        */
     }
-    */
+
 
     //atras
     public void atras(View view)
@@ -448,6 +466,25 @@ public class CarritoActivity extends AppCompatActivity
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //MÉTODOS GENERALES
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Cargar datos de nuevo
+    public void recargar(View view){
+        findViewById(R.id.grid).setVisibility(View.VISIBLE);
+        findViewById(R.id.button_recargar).setVisibility(View.INVISIBLE);
+        new cargarImagenesCarro().execute(((EasyShop)this.getApplication()).getCarrito());
+    }
+
+    //Actualizar carrito
+    private void actualizar_carrito(){
+        TextView num_art_carrito = findViewById(R.id.numero_art_carrito);
+        int n = ((EasyShop)this.getApplication()).getCarrito().getNumArticulos();
+        if (n > 0)
+        {
+            num_art_carrito.setVisibility(View.VISIBLE);
+            num_art_carrito.setText(String.format("%d",n));
+        }
+        else num_art_carrito.setVisibility(View.INVISIBLE);
+    }
 
     //Función para personalizar la Toolbar
     private void usarToolbar()

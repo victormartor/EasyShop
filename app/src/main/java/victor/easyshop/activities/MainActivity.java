@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import victor.easyshop.R;
+import victor.easyshop.clases.Carrito;
 import victor.easyshop.clases.Cliente;
 import victor.easyshop.data.EasyShop;
 
@@ -45,6 +46,7 @@ public class MainActivity extends Activity
         sIP_Servidor += txtIP.getText().toString();
 
         ((EasyShop)this.getApplication()).setIP_Servidor(sIP_Servidor);
+        ((EasyShop)this.getApplication()).setCarrito(new Carrito());
 
         new ConectarServidor().execute();
     }

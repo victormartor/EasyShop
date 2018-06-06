@@ -2,14 +2,20 @@ package victor.easyshop.data;
 
 import android.app.Application;
 
-public class EasyShop extends Application {
-    private String _sIP_Servidor;
+import victor.easyshop.clases.Carrito;
 
+public class EasyShop extends Application {
+    //IP SERVIDOR
+    private String _sIP_Servidor;
     public String getIP_Servidor() {
         return _sIP_Servidor;
     }
-
     public void setIP_Servidor(String sIP_Servidor) {
         _sIP_Servidor = sIP_Servidor;
     }
+
+    //CARRITO
+    private Carrito _carrito;
+    public Carrito getCarrito() { return _carrito; }
+    public void setCarrito(Carrito carrito) {_carrito = carrito;}
 }

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import victor.easyshop.R;
@@ -70,6 +71,8 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
         }
         else num_art_carrito.setVisibility(View.INVISIBLE);
         */
+        //Carrito
+        actualizar_carrito();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -200,6 +203,18 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
         findViewById(R.id.button_recargar).setVisibility(View.INVISIBLE);
         new cargarArticulos().execute(getIntent().getIntExtra(EXTRA_MARCA, 0),
                 getIntent().getIntExtra(EXTRA_CATEGORIA, 0));
+    }
+
+    //Actualizar carrito
+    private void actualizar_carrito(){
+        TextView num_art_carrito = findViewById(R.id.numero_art_carrito);
+        int n = ((EasyShop)this.getApplication()).getCarrito().getNumArticulos();
+        if (n > 0)
+        {
+            num_art_carrito.setVisibility(View.VISIBLE);
+            num_art_carrito.setText(String.format("%d",n));
+        }
+        else num_art_carrito.setVisibility(View.INVISIBLE);
     }
 
     //Función para personalizar la Toolbar

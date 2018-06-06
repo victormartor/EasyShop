@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import victor.easyshop.adapters.MarcaAdapter;
@@ -51,17 +52,9 @@ public class MarcasActivity extends AppCompatActivity implements AdapterView.OnI
         new cargarMarcas().execute();
 
         //carro
-        /*
-        if(carrito == null) carrito = new Carro();
-        TextView num_art_carrito = (TextView)findViewById(R.id.numero_art_carrito);
-        int n = carrito.getArticulos().size();
-        if (n > 0)
-        {
-            num_art_carrito.setVisibility(View.VISIBLE);
-            num_art_carrito.setText(String.format(Locale.ENGLISH,"%d",n));
-        }
-        else num_art_carrito.setVisibility(View.INVISIBLE);
-        */
+        actualizar_carrito();
+
+
 
         //Inactividad
         /*
@@ -174,6 +167,18 @@ public class MarcasActivity extends AppCompatActivity implements AdapterView.OnI
         findViewById(R.id.grid).setVisibility(View.VISIBLE);
         findViewById(R.id.button_recargar).setVisibility(View.INVISIBLE);
         new cargarMarcas().execute();
+    }
+
+    //Actualizar carrito
+    private void actualizar_carrito(){
+        TextView num_art_carrito = findViewById(R.id.numero_art_carrito);
+        int n = ((EasyShop)this.getApplication()).getCarrito().getNumArticulos();
+        if (n > 0)
+        {
+            num_art_carrito.setVisibility(View.VISIBLE);
+            num_art_carrito.setText(String.format("%d",n));
+        }
+        else num_art_carrito.setVisibility(View.INVISIBLE);
     }
 
     //Acción al pulsar el icono de la marca (en esta actividad no hace nada pero hay que declararlo igualmente)
