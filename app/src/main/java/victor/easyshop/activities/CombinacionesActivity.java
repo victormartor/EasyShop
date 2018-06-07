@@ -17,6 +17,7 @@ import victor.easyshop.R;
 import victor.easyshop.adapters.CombinacionesAdapter;
 import victor.easyshop.clases.Articulo;
 import victor.easyshop.clases.Cliente;
+import victor.easyshop.clases.Inactividad;
 import victor.easyshop.clases.Marca;
 import victor.easyshop.data.EasyShop;
 
@@ -75,6 +76,7 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
         */
 
         //Inactividad
+        reiniciar_inactividad();
         //if(inactividad != null) inactividad.onProgressUpdate(this);
 
         //Carrito
@@ -208,7 +210,7 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
 
         Intent intent = new Intent(this, UnArticuloActivity.class);
         intent.putExtra(UnArticuloActivity.EXTRA_ARTICULO, art.getId());
-        //intent.putExtra(UnArticuloActivity.EXTRA_CATEGORIA, art.getCategoria().getId());
+        intent.putExtra(UnArticuloActivity.EXTRA_CATEGORIA, art.getId_Categoria());
         intent.putExtra(UnArticuloActivity.EXTRA_MARCA, art.getId_Marca());
         intent.putExtra(UnArticuloActivity.EXTRA_COMBINACIONES,true);
 
@@ -227,8 +229,23 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
     //MÉTODOS GENERALES
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Inactividad
+    public void reiniciar_inactividad(){
+        Inactividad inactividad = ((EasyShop)this.getApplication()).getInactividad();
+        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
+        {
+            inactividad = new Inactividad();
+            ((EasyShop)this.getApplication()).setInactividad(inactividad);
+            inactividad.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,this);
+        }
+        else{
+            inactividad.onProgressUpdate(this);
+        }
+    }
+
     //Cargar datos de nuevo
     public void recargar(View view){
+        reiniciar_inactividad();
         findViewById(R.id.lista_combinaciones).setVisibility(View.VISIBLE);
         findViewById(R.id.button_recargar).setVisibility(View.INVISIBLE);
         new cargarCombinaciones().execute(getIntent().getIntExtra(EXTRA_MARCA, 0),
@@ -293,7 +310,7 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
         }
         */
         Intent intent = new Intent(this, CarritoActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent,0);
     }
 
     //Acción al pulsar el icono de la aplicación
@@ -312,22 +329,14 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
         finish();
     }
 
-    /*
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode,resultCode,data);
-        inactividad.onProgressUpdate(this);
-        TextView num_art_carrito = (TextView)findViewById(R.id.numero_art_carrito);
-        int n = carrito.getArticulos().size();
-        if (n > 0)
-        {
-            num_art_carrito.setVisibility(View.VISIBLE);
-            num_art_carrito.setText(String.format(Locale.ENGLISH,"%d",n));
-        }
-        else num_art_carrito.setVisibility(View.INVISIBLE);
+        reiniciar_inactividad();
+        //inactividad.onProgressUpdate(this);
+        actualizar_carrito();
     }
-    */
 
     @Override
     public void onBackPressed()

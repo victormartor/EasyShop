@@ -18,6 +18,7 @@ import victor.easyshop.adapters.ArticuloAdapter;
 import victor.easyshop.adapters.CategoriaAdapter;
 import victor.easyshop.clases.Articulo;
 import victor.easyshop.clases.Cliente;
+import victor.easyshop.clases.Inactividad;
 import victor.easyshop.clases.Marca;
 import victor.easyshop.data.EasyShop;
 
@@ -57,10 +58,12 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
         //Imagen de marca
         ImageView imagenMarca = (ImageView) findViewById(R.id.imageViewMarca);
         imagenMarca.setImageBitmap(marca.getImagenBitmap());
+        */
 
         //Inactividad
-        if(inactividad != null) inactividad.onProgressUpdate(this);
-
+        reiniciar_inactividad();
+        //if(inactividad != null) inactividad.onProgressUpdate(this);
+        /*
         //Carrito
         TextView num_art_carrito = (TextView)findViewById(R.id.numero_art_carrito);
         int n = carrito.getArticulos().size();
@@ -197,8 +200,23 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
     //MÉTODOS GENERALES
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Inactividad
+    public void reiniciar_inactividad(){
+        Inactividad inactividad = ((EasyShop)this.getApplication()).getInactividad();
+        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
+        {
+            inactividad = new Inactividad();
+            ((EasyShop)this.getApplication()).setInactividad(inactividad);
+            inactividad.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,this);
+        }
+        else{
+            inactividad.onProgressUpdate(this);
+        }
+    }
+
     //Cargar datos de nuevo
     public void recargar(View view){
+        reiniciar_inactividad();
         findViewById(R.id.grid).setVisibility(View.VISIBLE);
         findViewById(R.id.button_recargar).setVisibility(View.INVISIBLE);
         new cargarArticulos().execute(getIntent().getIntExtra(EXTRA_MARCA, 0),
@@ -263,7 +281,7 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
         }
         */
         Intent intent = new Intent(this, CarritoActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent,0);
     }
 
     //Acción al pulsar el icono de la aplicación
@@ -282,22 +300,14 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
         finish();
     }
 
-    /*
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode,resultCode,data);
-        inactividad.onProgressUpdate(this);
-        TextView num_art_carrito = (TextView)findViewById(R.id.numero_art_carrito);
-        int n = carrito.getArticulos().size();
-        if (n > 0)
-        {
-            num_art_carrito.setVisibility(View.VISIBLE);
-            num_art_carrito.setText(String.format(Locale.ENGLISH,"%d",n));
-        }
-        else num_art_carrito.setVisibility(View.INVISIBLE);
+        reiniciar_inactividad();
+        //inactividad.onProgressUpdate(this);
+        actualizar_carrito();
     }
-    */
 
     @Override
     public void onBackPressed()

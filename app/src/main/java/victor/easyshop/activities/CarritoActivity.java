@@ -1,6 +1,7 @@
 package victor.easyshop.activities;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -8,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -22,6 +24,7 @@ import java.io.IOException;
 import victor.easyshop.R;
 import victor.easyshop.adapters.CarritoAdapter;
 import victor.easyshop.clases.Carrito;
+import victor.easyshop.clases.Inactividad;
 import victor.easyshop.data.EasyShop;
 
 /*
@@ -51,6 +54,7 @@ public class CarritoActivity extends AppCompatActivity
         actualizarLista();
 
         //Inactividad
+        reiniciar_inactividad();
         //if(inactividad != null) inactividad.onProgressUpdate(this);
 
         //Texto vaciar carro
@@ -191,24 +195,27 @@ public class CarritoActivity extends AppCompatActivity
             inactividad.execute(this);
         }
         inactividad.onProgressUpdate(this);
+        */
+        reiniciar_inactividad();
+        Carrito carrito = ((EasyShop)this.getApplication()).getCarrito();
 
         //Insertar cuadro de diálogo para confirmación
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
 
         dialogo.setTitle(R.string.vaciar_carro);
 
-        if(ActividadPrincipal.carrito.vacio()) dialogo.setMessage(R.string.carro_vacio);
+        if(carrito.vacio()) dialogo.setMessage(R.string.carro_vacio);
         else dialogo.setMessage(R.string.confirmacion_vaciar_carro);
 
         dialogo.setCancelable(true);
 
-        if(!ActividadPrincipal.carrito.vacio())
+        if(!carrito.vacio())
         {
             dialogo.setPositiveButton(R.string.confirmar, new DialogInterface.OnClickListener()
             {
                 public void onClick(DialogInterface dialogo1, int id)
                 {
-                    ActividadPrincipal.carrito.vaciarCarro();
+                    ((EasyShop)CarritoActivity.this.getApplication()).getCarrito().vaciarCarro();
                     actualizarLista();
                     actualizar_carrito();
                 }
@@ -221,7 +228,6 @@ public class CarritoActivity extends AppCompatActivity
         });
 
         dialogo.show();
-        */
     }
 
     //Acción para eliminar un artículo de la lista
@@ -234,6 +240,8 @@ public class CarritoActivity extends AppCompatActivity
             inactividad.execute(this);
         }
         inactividad.onProgressUpdate(this);
+        */
+        reiniciar_inactividad();
         final View mi_view = view;
 
         //Insertar cuadro de diálogo para confirmación
@@ -247,10 +255,10 @@ public class CarritoActivity extends AppCompatActivity
         {
             public void onClick(DialogInterface dialogo1, int id)
             {
-                GridView gridView = (GridView) findViewById(R.id.grid);
-                Carro.ArticuloCarrito item = (Carro.ArticuloCarrito) gridView.getItemAtPosition(gridView.getPositionForView(mi_view));
+                GridView gridView = findViewById(R.id.grid);
+                Carrito.ArticuloCarrito item = (Carrito.ArticuloCarrito) gridView.getItemAtPosition(gridView.getPositionForView(mi_view));
 
-                ActividadPrincipal.carrito.getArticulos().remove(item);
+                ((EasyShop)CarritoActivity.this.getApplication()).getCarrito().eliminarArticulo(item);
 
                 actualizarLista();
                 actualizar_carrito();
@@ -262,7 +270,6 @@ public class CarritoActivity extends AppCompatActivity
         });
 
         dialogo.show();
-        */
     }
 
     //Accion al pulsar el botón de comprar y pagar en caja
@@ -397,21 +404,6 @@ public class CarritoActivity extends AppCompatActivity
     }
     */
 
-    //actualizar numero del carrito
-    /*
-    private void actualizar_carrito()
-    {
-        TextView num_art_carrito = (TextView)findViewById(R.id.numero_art_carrito);
-        int n = carrito.getArticulos().size();
-        if (n > 0)
-        {
-            num_art_carrito.setVisibility(View.VISIBLE);
-            num_art_carrito.setText(String.format(Locale.ENGLISH,"%d",n));
-        }
-        else num_art_carrito.setVisibility(View.INVISIBLE);
-    }
-    */
-
     //NAVEGAR A OTRA ACTIVIDAD/////////////////////////
 
     //Acción al pulsar la imagen del artículo dentro de la lista
@@ -423,37 +415,36 @@ public class CarritoActivity extends AppCompatActivity
             inactividad = new Inactividad();
             inactividad.execute(this);
         }
-        Intent intent = new Intent(this, ActividadMasDetalle.class);
+        */
+        Intent intent = new Intent(this, ImagenActivity.class);
 
-        GridView gridView = (GridView) findViewById(R.id.grid);
-        Carro.ArticuloCarrito item = (Carro.ArticuloCarrito) gridView.getItemAtPosition(gridView.getPositionForView(view));
-        intent.putExtra(ActividadMasDetalle.EXTRA_ARTICULO, item.getImagenUrl());
+        GridView gridView = findViewById(R.id.grid);
+        Carrito.ArticuloCarrito item = (Carrito.ArticuloCarrito) gridView.getItemAtPosition(gridView.getPositionForView(view));
+        intent.putExtra(ImagenActivity.EXTRA_IMAGEN, item.getImagenURL());
 
         startActivityForResult(intent,0);
-        */
     }
 
 
     //Acción al pulsar el texto del articulo del carrito
     public void iraArticulo(View view)
     {
+        GridView gridView = findViewById(R.id.grid);
+        Carrito.ArticuloCarrito item = (Carrito.ArticuloCarrito) gridView.getItemAtPosition(gridView.getPositionForView(view));
+
+        Intent intent = new Intent(this, UnArticuloActivity.class);
+        intent.putExtra(UnArticuloActivity.EXTRA_ARTICULO, item.getId_Articulo());
+        intent.putExtra(UnArticuloActivity.EXTRA_MARCA, item.getId_Marca());
+        intent.putExtra(UnArticuloActivity.EXTRA_CATEGORIA, item.getId_Categoria());
         /*
-        GridView gridView = (GridView) findViewById(R.id.grid);
-        Carro.ArticuloCarrito item = (Carro.ArticuloCarrito) gridView.getItemAtPosition(gridView.getPositionForView(view));
-
-        Intent intent = new Intent(this, ActividadDetalle.class);
-        intent.putExtra(ActividadDetalle.EXTRA_ARTICULO, item.getId());
-        intent.putExtra(ActividadDetalle.EXTRA_MARCA, item.getIdMarca());
-        intent.putExtra(ActividadDetalle.EXTRA_CATEGORIA, item.getIdCategoria());
-
         if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
         {
             inactividad = new Inactividad();
             inactividad.execute(this);
         }
+        */
         startActivity(intent);
         finish();
-        */
     }
 
 
@@ -467,8 +458,23 @@ public class CarritoActivity extends AppCompatActivity
     //MÉTODOS GENERALES
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Inactividad
+    public void reiniciar_inactividad(){
+        Inactividad inactividad = ((EasyShop)this.getApplication()).getInactividad();
+        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
+        {
+            inactividad = new Inactividad();
+            ((EasyShop)this.getApplication()).setInactividad(inactividad);
+            inactividad.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,this);
+        }
+        else{
+            inactividad.onProgressUpdate(this);
+        }
+    }
+
     //Cargar datos de nuevo
     public void recargar(View view){
+        reiniciar_inactividad();
         findViewById(R.id.grid).setVisibility(View.VISIBLE);
         findViewById(R.id.button_recargar).setVisibility(View.INVISIBLE);
         new cargarImagenesCarro().execute(((EasyShop)this.getApplication()).getCarrito());
@@ -526,14 +532,14 @@ public class CarritoActivity extends AppCompatActivity
         finish();
     }
 
-    /*
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode,resultCode,data);
-        inactividad.onProgressUpdate(this);
+        reiniciar_inactividad();
     }
-    */
+
 
     @Override
     public void onBackPressed()
@@ -544,8 +550,8 @@ public class CarritoActivity extends AppCompatActivity
             inactividad = new Inactividad();
             inactividad.execute(this);
         }
-        setResult(RESULT_CANCELED, null);
         */
+        //setResult(RESULT_CANCELED, null);
         super.onBackPressed();
         finish();
     }

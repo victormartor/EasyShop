@@ -238,7 +238,8 @@ public class Cliente
         sRespuesta = socketStream.recibeMensaje();
         while(!sRespuesta.equals("FinComb")){
             String[] sArticulo = sRespuesta.split(":");
-            Articulo articulo = new Articulo(Integer.parseInt(sArticulo[0]),Integer.parseInt(sArticulo[5]));
+            Articulo articulo = new Articulo(Integer.parseInt(sArticulo[0]),Integer.parseInt(sArticulo[5]),
+                    Integer.parseInt(sArticulo[6]));
 
             sRespuesta = socketStream.recibeMensaje();
             Imagen imagen = new Imagen("http://"+sIP_Servidor+"/EasyShop/Imagenes/"+sRespuesta);

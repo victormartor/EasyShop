@@ -15,6 +15,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import victor.easyshop.R;
+import victor.easyshop.clases.Inactividad;
+import victor.easyshop.data.EasyShop;
 
 /*
  * Autor: Víctor Martín Torres - 30/8/17
@@ -39,6 +41,7 @@ public class ImagenActivity extends AppCompatActivity
         //nuevaTarea.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,URL);
 
         //Inactividad
+        reiniciar_inactividad();
         //if(inactividad != null) inactividad.onProgressUpdate(this);
     }
 
@@ -105,8 +108,23 @@ public class ImagenActivity extends AppCompatActivity
         }
     }
 
+    //Inactividad
+    public void reiniciar_inactividad(){
+        Inactividad inactividad = ((EasyShop)this.getApplication()).getInactividad();
+        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
+        {
+            inactividad = new Inactividad();
+            ((EasyShop)this.getApplication()).setInactividad(inactividad);
+            inactividad.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,this);
+        }
+        else{
+            inactividad.onProgressUpdate(this);
+        }
+    }
+
     //Cargar datos de nuevo
     public void recargar(View view){
+        reiniciar_inactividad();
         findViewById(R.id.imagen_extendida).setVisibility(View.VISIBLE);
         findViewById(R.id.button_recargar).setVisibility(View.INVISIBLE);
         new CargaImagenHD().execute(getIntent().getStringExtra(EXTRA_IMAGEN));

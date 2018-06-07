@@ -3,6 +3,7 @@ package victor.easyshop.data;
 import android.app.Application;
 
 import victor.easyshop.clases.Carrito;
+import victor.easyshop.clases.Inactividad;
 
 public class EasyShop extends Application {
     //IP SERVIDOR
@@ -18,4 +19,9 @@ public class EasyShop extends Application {
     private Carrito _carrito;
     public Carrito getCarrito() { return _carrito; }
     public void setCarrito(Carrito carrito) {_carrito = carrito;}
+
+    //INACTIVIDAD
+    private Inactividad _inactividad;
+    public Inactividad getInactividad(){return _inactividad;}
+    public void setInactividad(Inactividad inactividad) {_inactividad = inactividad;}
 }

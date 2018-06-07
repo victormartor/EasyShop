@@ -26,6 +26,7 @@ import victor.easyshop.clases.Articulo_Color;
 import victor.easyshop.clases.Articulo_Talla;
 import victor.easyshop.clases.Carrito;
 import victor.easyshop.clases.Cliente;
+import victor.easyshop.clases.Inactividad;
 import victor.easyshop.clases.Marca;
 import victor.easyshop.data.EasyShop;
 
@@ -116,6 +117,7 @@ public class UnArticuloActivity extends AppCompatActivity
         */
 
         //Inactividad
+        reiniciar_inactividad();
         //if(inactividad != null) inactividad.onProgressUpdate(this);
 
         //Botones de las flechas
@@ -424,7 +426,7 @@ public class UnArticuloActivity extends AppCompatActivity
             }
             inactividad.onProgressUpdate(ActividadDetalle.this);
             */
-
+            reiniciar_inactividad();
 
             RecyclerView mRecyclerView = findViewById(R.id.lista_colores);
             int numColor = mRecyclerView.getChildLayoutPosition(view);
@@ -459,6 +461,7 @@ public class UnArticuloActivity extends AppCompatActivity
             }
             inactividad.onProgressUpdate(ActividadDetalle.this);
             */
+            reiniciar_inactividad();
 
             RecyclerView mRecyclerView = findViewById(R.id.lista_tallas);
             int n = mRecyclerView.getChildLayoutPosition(view);
@@ -494,6 +497,7 @@ public class UnArticuloActivity extends AppCompatActivity
 
             inactividad.onProgressUpdate(this);
             */
+            reiniciar_inactividad();
 
             numImagen--;
             ImageView imagenArticulo = findViewById(R.id.imagen_extendida);
@@ -520,6 +524,7 @@ public class UnArticuloActivity extends AppCompatActivity
             }
             inactividad.onProgressUpdate(this);
             */
+            reiniciar_inactividad();
 
             numImagen++;
             ImageView imagenArticulo = findViewById(R.id.imagen_extendida);
@@ -607,6 +612,7 @@ public class UnArticuloActivity extends AppCompatActivity
             }
             inactividad.onProgressUpdate(this);
             */
+            reiniciar_inactividad();
             numTalla--;
             Talla_Sel = adapter.getItem(numTalla);
 
@@ -634,6 +640,7 @@ public class UnArticuloActivity extends AppCompatActivity
             }
             inactividad.onProgressUpdate(this);
             */
+            reiniciar_inactividad();
             numTalla++;
             Talla_Sel = adapter.getItem(numTalla);
 
@@ -660,7 +667,7 @@ public class UnArticuloActivity extends AppCompatActivity
         */
         Intent intent = new Intent(this, ImagenActivity.class);
         intent.putExtra(ImagenActivity.EXTRA_IMAGEN, Color_Sel.getImagenes().get(numImagen).getUrl());
-        startActivity(intent);
+        startActivityForResult(intent,0);
     }
 
     //Acción al pulsar en el botón de añadir al carrito
@@ -735,8 +742,23 @@ public class UnArticuloActivity extends AppCompatActivity
     //MÉTODOS GENERALES
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Inactividad
+    public void reiniciar_inactividad(){
+        Inactividad inactividad = ((EasyShop)this.getApplication()).getInactividad();
+        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
+        {
+            inactividad = new Inactividad();
+            ((EasyShop)this.getApplication()).setInactividad(inactividad);
+            inactividad.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,this);
+        }
+        else{
+            inactividad.onProgressUpdate(this);
+        }
+    }
+
     //Cargar datos de nuevo
     public void recargar(View view){
+        reiniciar_inactividad();
         findViewById(R.id.datos_articulo).setVisibility(View.VISIBLE);
         findViewById(R.id.button_recargar).setVisibility(View.INVISIBLE);
         new cargarArticulo().execute(getIntent().getIntExtra(EXTRA_MARCA, 0),
@@ -802,7 +824,7 @@ public class UnArticuloActivity extends AppCompatActivity
         }
         */
         Intent intent = new Intent(this, CarritoActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent,0);
     }
 
     //Acción al pulsar el icono de la aplicación
@@ -821,22 +843,14 @@ public class UnArticuloActivity extends AppCompatActivity
         finish();
     }
 
-    /*
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode,resultCode,data);
-        inactividad.onProgressUpdate(this);
-        TextView num_art_carrito = (TextView)findViewById(R.id.numero_art_carrito);
-        int n = carrito.getArticulos().size();
-        if (n > 0)
-        {
-            num_art_carrito.setVisibility(View.VISIBLE);
-            num_art_carrito.setText(String.format(Locale.ENGLISH,"%d",n));
-        }
-        else num_art_carrito.setVisibility(View.INVISIBLE);
+        reiniciar_inactividad();
+        //inactividad.onProgressUpdate(this);
+        actualizar_carrito();
     }
-    */
 
     @Override
     protected void onDestroy()

@@ -18,6 +18,7 @@ import victor.easyshop.adapters.CategoriaAdapter;
 import victor.easyshop.R;
 import victor.easyshop.clases.Categoria;
 import victor.easyshop.clases.Cliente;
+import victor.easyshop.clases.Inactividad;
 import victor.easyshop.clases.Marca;
 import victor.easyshop.data.EasyShop;
 
@@ -55,6 +56,7 @@ public class CategoriasActivity extends AppCompatActivity implements AdapterView
         */
 
         //Inactividad
+        reiniciar_inactividad();
         //if(inactividad != null) inactividad.onProgressUpdate(this);
 
         //Carrito
@@ -192,8 +194,23 @@ public class CategoriasActivity extends AppCompatActivity implements AdapterView
     //MÉTODOS GENERALES
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Inactividad
+    public void reiniciar_inactividad(){
+        Inactividad inactividad = ((EasyShop)this.getApplication()).getInactividad();
+        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
+        {
+            inactividad = new Inactividad();
+            ((EasyShop)this.getApplication()).setInactividad(inactividad);
+            inactividad.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,this);
+        }
+        else{
+            inactividad.onProgressUpdate(this);
+        }
+    }
+
     //Cargar datos de nuevo
     public void recargar(View view){
+        reiniciar_inactividad();
         findViewById(R.id.grid).setVisibility(View.VISIBLE);
         findViewById(R.id.button_recargar).setVisibility(View.INVISIBLE);
         new cargarCategorias().execute(getIntent().getIntExtra(EXTRA_MARCA, 0));
@@ -243,7 +260,7 @@ public class CategoriasActivity extends AppCompatActivity implements AdapterView
         }
         */
         Intent intent = new Intent(this, CarritoActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent,0);
     }
 
     //Acción al pulsar el icono de la aplicación
@@ -262,22 +279,14 @@ public class CategoriasActivity extends AppCompatActivity implements AdapterView
         finish();
     }
 
-    /*
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode,resultCode,data);
-        inactividad.onProgressUpdate(this);
-        TextView num_art_carrito = (TextView)findViewById(R.id.numero_art_carrito);
-        int n = carrito.getArticulos().size();
-        if (n > 0)
-        {
-            num_art_carrito.setVisibility(View.VISIBLE);
-            num_art_carrito.setText(String.format(Locale.ENGLISH,"%d",n));
-        }
-        else num_art_carrito.setVisibility(View.INVISIBLE);
+        //inactividad.onProgressUpdate(this);
+        reiniciar_inactividad();
+        actualizar_carrito();
     }
-    */
 
     @Override
     public void onBackPressed()
@@ -291,7 +300,6 @@ public class CategoriasActivity extends AppCompatActivity implements AdapterView
             inactividad.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,this);
         }
         */
-
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
