@@ -24,6 +24,7 @@ import java.io.IOException;
 import victor.easyshop.R;
 import victor.easyshop.adapters.CarritoAdapter;
 import victor.easyshop.clases.Carrito;
+import victor.easyshop.clases.Cliente;
 import victor.easyshop.clases.Inactividad;
 import victor.easyshop.data.EasyShop;
 
@@ -282,26 +283,32 @@ public class CarritoActivity extends AppCompatActivity
             inactividad.execute(this);
         }
         inactividad.onProgressUpdate(this);
+        */
+        reiniciar_inactividad();
+        Carrito carrito = ((EasyShop)this.getApplication()).getCarrito();
 
         //Insertar cuadro de diálogo para confirmación
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
 
         dialogo.setTitle(R.string.compra);
 
-        if(ActividadPrincipal.carrito.vacio()) dialogo.setMessage(R.string.carro_vacio);
+        if(carrito.vacio()) dialogo.setMessage(R.string.carro_vacio);
         else dialogo.setMessage(R.string.confirmacion_compra);
 
         dialogo.setCancelable(false);
 
-        if(!ActividadPrincipal.carrito.vacio())
+        if(!carrito.vacio())
         {
             dialogo.setPositiveButton(R.string.confirmar, new DialogInterface.OnClickListener()
             {
                 public void onClick(DialogInterface dialogo1, int id)
                 {
                     //ENVIAR TICKET DE COMPRA
+                    new enviarCompra().execute();
+                    /*
                     enviarCompra enviar = new enviarCompra();
                     enviar.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    */
                 }
             });
         }
@@ -312,28 +319,29 @@ public class CarritoActivity extends AppCompatActivity
         });
 
         dialogo.show();
-        */
     }
 
     //clase enviar compra
-    /*
-    private class enviarCompra extends AsyncTask<Void, Void, Void>
+    private class enviarCompra extends AsyncTask<Void, Void, Integer>
     {
         ProgressDialog pDialog;
+        private String _sRespuesta;
         boolean enviado;
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Integer doInBackground(Void... params) {
 
+            String sIP_Servidor = ((EasyShop)getApplicationContext()).getIP_Servidor();
+            String sPuerto = "5000";
             try {
-                String numPuerto = "5000"; // número de puerto por defecto
-                ClienteAuxiliar.conectar(nombreMaquina, numPuerto, carrito);
-            } // fin de try
-            catch (Exception ex) {
-                ex.printStackTrace( );
-                cancel(true);
-            } // fin de catch
+                Carrito carrito = ((EasyShop)getApplicationContext()).getCarrito();
+                int numCliente = Cliente.enviaCompra(carrito, sIP_Servidor, sPuerto);
+                return numCliente;
 
+            } catch (Exception e) {
+                _sRespuesta = e.toString();
+                cancel(false);
+            }
             return null;
         }
 
@@ -346,7 +354,7 @@ public class CarritoActivity extends AppCompatActivity
         protected void onPreExecute() {
 
             enviado = true;
-            pDialog = new ProgressDialog(ActividadCarrito.this);
+            pDialog = new ProgressDialog(CarritoActivity.this);
             pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             pDialog.setMessage(getString(R.string.enviando_ticket));
             pDialog.setCancelable(true);
@@ -361,21 +369,22 @@ public class CarritoActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onPostExecute(Void resultado) {
+        protected void onPostExecute(Integer numCliente) {
 
             pDialog.dismiss();
 
             if(enviado)
             {
+                Carrito carrito = ((EasyShop)getApplicationContext()).getCarrito();
                 carrito.vaciarCarro();
                 actualizarLista();
 
                 //Insertar cuadro de diálogo para confirmación
-                AlertDialog.Builder dialogo = new AlertDialog.Builder(ActividadCarrito.this);
+                AlertDialog.Builder dialogo = new AlertDialog.Builder(CarritoActivity.this);
 
                 dialogo.setTitle(getString(R.string.ticket_enviado));
 
-                String mensaje = getString(R.string.ticket_enviado_confirmacion)+"\n"+getString(R.string.recuerde)+numCliente;
+                String mensaje = getString(R.string.ticket_enviado_confirmacion)+"\n"+getString(R.string.recuerde)+" "+numCliente;
                 dialogo.setMessage(mensaje);
 
                 dialogo.setCancelable(false);
@@ -383,12 +392,12 @@ public class CarritoActivity extends AppCompatActivity
 
                 dialogo.setPositiveButton(getString(R.string.aceptar), new DialogInterface.OnClickListener()
                 {
-                    public void onClick(DialogInterface dialogo1, int id) {}
+                    public void onClick(DialogInterface dialogo1, int id) {
+                        portada(null);
+                    }
                 });
 
                 dialogo.show();
-
-                numCliente++;
             }
         }
 
@@ -397,12 +406,11 @@ public class CarritoActivity extends AppCompatActivity
             pDialog.dismiss();
             if(enviado)
             {
-                Toast t = Toast.makeText(ActividadCarrito.this,getString(R.string.error),Toast.LENGTH_LONG);
+                Toast t = Toast.makeText(CarritoActivity.this,getString(R.string.error)+"\n"+_sRespuesta,Toast.LENGTH_LONG);
                 t.show();
             }
         }
     }
-    */
 
     //NAVEGAR A OTRA ACTIVIDAD/////////////////////////
 

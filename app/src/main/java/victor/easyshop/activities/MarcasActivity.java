@@ -225,9 +225,11 @@ public class MarcasActivity extends AppCompatActivity implements AdapterView.OnI
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        super.onActivityResult(requestCode,resultCode,data);
+        //super.onActivityResult(requestCode,resultCode,data);
         //inactividad.onProgressUpdate(this);
-        reiniciar_inactividad();
+        Inactividad inactividad = ((EasyShop)this.getApplication()).getInactividad();
+        if(inactividad != null) inactividad.setContext(this);
+        if(!((EasyShop)getApplicationContext()).getCarrito().vacio())reiniciar_inactividad();
         actualizar_carrito();
     }
 

@@ -249,7 +249,27 @@ public class Cliente
             sRespuesta = socketStream.recibeMensaje();;
         }
         socketStream.close();
-        System.out.println("combinaciones recibidas");
         return aComb;
+    }
+
+    public static Integer enviaCompra(Carrito carrito, String sIP_Servidor, String sPuerto) throws IOException {
+        String sRespuesta = null;
+        int iPuerto = Integer.parseInt(sPuerto);
+        SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
+        socketStream.setSoTimeout(5000);
+        socketStream.enviaMensaje("pedido");
+
+        String mensaje = "";;
+
+        for(Carrito.ArticuloCarrito articulo : carrito.getArticulos()){
+            mensaje += articulo.getId_Articulo()+":"+articulo.getId_Color()+":"+articulo.getId_Talla()+"\n";
+        }
+        mensaje+= "FinTicket";
+        System.out.println(mensaje);
+        socketStream.enviaMensaje(mensaje);
+        int numCliente = Integer.parseInt(socketStream.recibeMensaje());
+
+        socketStream.close();
+        return numCliente;
     }
 } // fin de class

@@ -73,6 +73,8 @@ public class Inactividad extends AsyncTask<Context, Context, Void>
     protected void onCancelled() {
     }
 
+    public void setContext(Context context){mContext = context;}
+
     ////////////////////////////////////////////////////
     private static final int TIME_OUT = 10000;
 
