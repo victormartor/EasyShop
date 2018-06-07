@@ -3,8 +3,10 @@ package victor.easyshop.activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -28,6 +30,18 @@ public class MainActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String sIP_Servidor = myPreferences.getString("IP_Servidor", "unknown");
+        if(!sIP_Servidor.equals("unknown")){
+            String[] octeto = sIP_Servidor.split("\\.");
+            if(octeto.length == 4){
+                ((EditText)findViewById(R.id.direccionIP_1oct)).setText(octeto[0]);
+                ((EditText)findViewById(R.id.direccionIP_2oct)).setText(octeto[1]);
+                ((EditText)findViewById(R.id.direccionIP_3oct)).setText(octeto[2]);
+                ((EditText)findViewById(R.id.direccionIP_4oct)).setText(octeto[3]);
+            }
+        }
     }
 
     public void confirmar(View view)
@@ -44,6 +58,11 @@ public class MainActivity extends Activity
 
         txtIP = findViewById(R.id.direccionIP_4oct);
         sIP_Servidor += txtIP.getText().toString();
+
+        SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor myEditor = myPreferences.edit();
+        myEditor.putString("IP_Servidor", sIP_Servidor);
+        myEditor.commit();
 
         ((EasyShop)this.getApplication()).setIP_Servidor(sIP_Servidor);
         ((EasyShop)this.getApplication()).setCarrito(new Carrito());
