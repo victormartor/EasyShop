@@ -11,8 +11,7 @@
     <!--Detalle articulo-->
     <string name="tallas">Tallas</string>
     <string name="colores">Otros colores</string>
-    <string name="ficha">Ver ficha técnica</string>
-    <string name="no_ficha">Este artículo no tiene ficha técnica</string>
+    <string name="mas_info">+info</string>
 
     <string name="talla">Talla</string>
     <string name="color">Color</string>
@@ -66,13 +65,6 @@
     <!--Imagen-->
     <string name="cargar_imagen">Cargando imagen</string>
     <string name="zoom">Puede hacer zoom en la imagen con los dedos</string>
-
-    <!--Busqueda de articulo-->
-    <string name="busq_art">Búsqueda de artículo</string>
-    <string name="buscar">Buscar</string>
-    <string name="no_encontrado">Ningún artículo coincide con el criterio de búsqueda</string>
-    <string name="nueva_busqueda">Nueva búsqueda</string>
-    <string name="resultado_busq">Resultados de la búsqueda</string>
 
     <!--Conectar con el servidor-->
     <string name="direccion_IP">Dirección IP Servidor</string>

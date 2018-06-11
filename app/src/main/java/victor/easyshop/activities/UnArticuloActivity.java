@@ -3,6 +3,8 @@ package victor.easyshop.activities;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -135,6 +138,10 @@ public class UnArticuloActivity extends AppCompatActivity
         }
         else num_art_carrito.setVisibility(View.INVISIBLE);
         */
+
+        //Texto mas info tallas
+        TextView texto_info_tallas = findViewById(R.id.mas_info_tallas);
+        texto_info_tallas.setPaintFlags(texto_info_tallas.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -736,6 +743,20 @@ public class UnArticuloActivity extends AppCompatActivity
 
         dialogo.show();
 
+    }
+
+    //MAS INFO TALLAS//////////////////
+    public void info_tallas(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog dialog = builder.create();
+
+        android.view.LayoutInflater inflater = getLayoutInflater();
+        View dialogLayout = inflater.inflate(R.layout.image_dialog_layout, null);
+        dialog.setView(dialogLayout);
+        dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
+        dialog.show();
+
+        reiniciar_inactividad();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

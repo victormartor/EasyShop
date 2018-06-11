@@ -254,18 +254,40 @@
                     android:layout_marginRight="20dp"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/Tallas"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/foreground_text"
-                        android:fontFamily="sans-serif"
-                        android:paddingLeft="20dp"
-                        android:text="@string/tallas"
-                        android:textAllCaps="true"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/Tallas"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/foreground_text"
+                            android:fontFamily="sans-serif"
+                            android:paddingLeft="20dp"
+                            android:text="@string/tallas"
+                            android:textAllCaps="true"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/mas_info_tallas"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/foreground_text"
+                            android:fontFamily="sans-serif"
+                            android:paddingLeft="20dp"
+                            android:text="@string/mas_info"
+                            android:textAllCaps="true"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                            android:textSize="16sp"
+                            android:onClick="info_tallas"/>
+
+                    </LinearLayout>
+
+
 
 
                     <android.support.v7.widget.RecyclerView

@@ -26,7 +26,7 @@ public class Inactividad extends AsyncTask<Context, Context, Void>
     protected Void doInBackground(Context... params)
     {
         mContext = params[0];
-        int sec = 30;
+        int sec = 60;
         for(i=0; i<sec; i++)
         {
             try{ Thread.sleep(1000); }catch (InterruptedException e){e.printStackTrace();}
