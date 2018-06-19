@@ -3,9 +3,8 @@ package victor.easyshop.clases;
 import android.graphics.Bitmap;
 
 /**
- * Autor: Víctor Martín Torres - 30/8/17
- *
  * Clase que representa la existencia de una Categoría
+ * @author Víctor Martín Torres
  */
 public class Categoria
 {
@@ -14,6 +13,12 @@ public class Categoria
     private Imagen _imagen;
     private int _iId_Marca;
 
+    /**
+     * Constructor
+     * @param iId el Id de la categoría
+     * @param sNombre el nombre de la categoría
+     * @param iId_Marca el Id de la marca
+     */
     public Categoria(int iId, String sNombre, int iId_Marca)
     {
         _iId = iId;
@@ -27,38 +32,12 @@ public class Categoria
     public Imagen getImagen() {return _imagen;}
     public int getId_Marca() {return _iId_Marca;}
 
+    /**
+     * Devuelve un objeto Bitmap de la imagen de la categoría
+     * @return la imagen de la categoría
+     */
     public Bitmap getImagenBitmap(){return _imagen.getBitmap();}
 
     //SET
     public void setImagen(Imagen imagen){_imagen = imagen;}
-
-
-    //METODOS
-    /*
-    public void insertarCategoria(Categoria cat) { categorias.add(cat);}
-
-    public Categoria[] getCategoriasVector()
-    {
-        int n = categorias.size();
-        Categoria[] vector = new Categoria[n];
-
-        for (int i=0; i<n; i++)
-        {
-            vector[i] = categorias.get(i);
-        }
-
-        return  vector;
-    }
-
-    @Nullable
-    public static Marca getMarcadeLista(Marca[] lista, int id)
-    {
-        for (Marca item : lista) {
-            if (item.getId() == id) {
-                return item;
-            }
-        }
-        return null;
-    }
-    */
 }

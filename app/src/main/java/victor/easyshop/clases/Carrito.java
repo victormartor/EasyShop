@@ -10,13 +10,14 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * Autor: Víctor Martín Torres - 30/8/17
- *
  * Clase que representa la existencia del Carrito
+ * @author Víctor Martín Torres
  */
 public class Carrito
 {
-    //clase para un articulo dentro del carrito
+    /**
+     * clase para un articulo dentro del carrito
+     */
     public class ArticuloCarrito
     {
         private int _iId_Articulo;
@@ -67,7 +68,10 @@ public class Carrito
         public String getMarca() {return _sMarca;}
         public int getId_Categoria() {return _iId_Categoria;}
 
-        //Función para cargar la imagen de internet desde la URL
+        /**
+         * Función para cargar la imagen de internet desde la URL
+         * @throws IOException error al conectar con el servidor
+         */
         public void cargarImagen() throws IOException
         {
             if (_bitmap == null) {
@@ -78,13 +82,17 @@ public class Carrito
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inSampleSize = 4; // el factor de escala a minimizar la imagen, siempre es potencia de 2
 
-                _bitmap = BitmapFactory.decodeStream(conn.getInputStream(), new Rect(0, 0, 0, 0), options);
+                _bitmap = BitmapFactory.decodeStream(conn.getInputStream(),
+                        new Rect(0, 0, 0, 0), options);
             }
         }
     }
 
     private ArrayList<ArticuloCarrito> _aArticulos;
 
+    /**
+     * Constructor, inicializa el array de artículos vacío
+     */
     public Carrito()
     {
         _aArticulos = new ArrayList<>();
@@ -96,8 +104,26 @@ public class Carrito
 
     //METODOS
 
+    /**
+     * Indica si el carrito está vacío o no
+     * @return devuelve true si el carrito está vacío y false en caso contrario
+     */
     public boolean vacio() {return _aArticulos.isEmpty();}
 
+    /**
+     * Insertar nuevo artículo al carrito
+     * @param iId_Articulo el Id del artículo
+     * @param sNombre el Nombre del artículo
+     * @param dPVP el precio del artículo
+     * @param iId_Color el Id del color elegido
+     * @param sColor el nombre del color elegido
+     * @param iId_Talla el Id de la talla elegida
+     * @param sTalla el nombre de la talla elegida
+     * @param sImagenURL la URL de la imagen característica del artículo y su color elegido
+     * @param iId_Marca el Id de la marca
+     * @param sMarca el nombre de la marca
+     * @param iId_Categoria el Id de la categoría
+     */
     public void insertarArticulo(int iId_Articulo, String sNombre, double dPVP, int iId_Color, String sColor,
                                  int iId_Talla, String sTalla, String sImagenURL,
                                  int iId_Marca, String sMarca, int iId_Categoria)
@@ -109,10 +135,17 @@ public class Carrito
         _aArticulos.add(articulo);
     }
 
+    /**
+     * Eliminar artículo del carrito
+     * @param articulo el artículo a eliminar
+     */
     public void eliminarArticulo(ArticuloCarrito articulo){
         _aArticulos.remove(articulo);
     }
 
+    /**
+     * Vaciar carrito completamente
+     */
     public void vaciarCarro()
     {
         if(!_aArticulos.isEmpty())

@@ -32,10 +32,18 @@
         <activity
             android:name=".activities.CategoriasActivity"
             android:screenOrientation="sensorLandscape" />
-        <activity android:name=".activities.ArticulosActivity" />
-        <activity android:name=".activities.UnArticuloActivity" />
-        <activity android:name=".activities.ImagenActivity" />
-        <activity android:name=".activities.CombinacionesActivity"></activity>
+        <activity
+            android:name=".activities.ArticulosActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name=".activities.UnArticuloActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name=".activities.ImagenActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name=".activities.CombinacionesActivity"
+            android:screenOrientation="sensorLandscape"/>
     </application>
 
 </manifest>

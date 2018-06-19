@@ -14,16 +14,21 @@ import java.util.ArrayList;
 import victor.easyshop.R;
 import victor.easyshop.clases.Categoria;
 
-/*
- * Autor: Víctor Martín Torres - 30/8/17
- *
- * Clase AdaptadorDeMarcas: adaptador para personalizar la vista de las marcas en la ActividadPrincipal
+/**
+ * Adaptador para personalizar la vista de las marcas en la ActividadPrincipal
+ * @author Víctor Martín Torres
  */
 public class CategoriaAdapter extends BaseAdapter
 {
     private Context _context;
     private ArrayList<Categoria> _aCategorias;
 
+    /**
+     * Constructor a partir de un array de elementos
+     * @param context el contexto donde se va a desplegar el grid
+     * @param aCategorias lista de elementos
+     * @throws IOException error al cargar las imágenes
+     */
     public CategoriaAdapter(Context context, ArrayList<Categoria> aCategorias) throws IOException
     {
         _context = context;
@@ -32,24 +37,45 @@ public class CategoriaAdapter extends BaseAdapter
             categoria.getImagen().cargarImagen();
     }
 
+    /**
+     * Devuelve el número de elementos de la lista
+     * @return el tamaño de la lista
+     */
     @Override
     public int getCount()
     {
         return _aCategorias.size();
     }
 
+    /**
+     * Devuelve un elemento de la lista
+     * @param index la posicion del elemento
+     * @return el elemento en esa posicion
+     */
     @Override
     public Categoria getItem(int index)
     {
         return _aCategorias.get(index);
     }
 
+    /**
+     * Devuelve el Id de un elemento de la lista
+     * @param index la posicion del elemento
+     * @return el Id del elemento en esa posicion
+     */
     @Override
     public long getItemId(int index)
     {
         return getItem(index).getId();
     }
 
+    /**
+     * Cargar la vista de ese elemento en el grid
+     * @param position la posicion del elemento
+     * @param view la vista donde se va a cargar
+     * @param viewGroup el grupo de vistas
+     * @return La vista ya cargada
+     */
     @Override
     public View getView(int position, View view, ViewGroup viewGroup)
     {

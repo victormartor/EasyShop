@@ -13,34 +13,52 @@ import java.util.ArrayList;
 import victor.easyshop.R;
 import victor.easyshop.clases.Carrito;
 
-/*
- * Autor: Víctor Martín Torres - 30/8/17
- *
- * Clase AdaptadorDeCarro: adaptador para personalizar la vista de los articulos en la ActividadCarrito
+/**
+ * Adaptador para personalizar la vista de los articulos en la ActividadCarrito
+ * @author Víctor Martín Torres
  */
 public class CarritoAdapter extends BaseAdapter
 {
     private Context context;
     private ArrayList<Carrito.ArticuloCarrito> articulos;
 
+    /**
+     * Constructor a partir de un array de elementos
+     * @param context el contexto donde se va a desplegar el grid
+     * @param articulos lista de elementos
+     */
     public CarritoAdapter(Context context, ArrayList<Carrito.ArticuloCarrito> articulos)
     {
         this.context = context;
         this.articulos = articulos;
     }
 
+    /**
+     * Devuelve el número de elementos de la lista
+     * @return el tamaño de la lista
+     */
     @Override
     public int getCount()
     {
         return articulos.size();
     }
 
+    /**
+     * Devuelve un elemento de la lista
+     * @param position la posicion del elemento
+     * @return el elemento en esa posicion
+     */
     @Override
     public Carrito.ArticuloCarrito getItem(int position)
     {
         return articulos.get(position);
     }
 
+    /**
+     * Devuelve el Id de un elemento de la lista
+     * @param position la posicion del elemento
+     * @return el Id del elemento en esa posicion
+     */
     @Override
     public long getItemId(int position)
     {
@@ -50,6 +68,13 @@ public class CarritoAdapter extends BaseAdapter
         return Long.parseLong(id);
     }
 
+    /**
+     * Cargar la vista de ese elemento en el grid
+     * @param position la posicion del elemento
+     * @param view la vista donde se va a cargar
+     * @param viewGroup el grupo de vistas
+     * @return La vista ya cargada
+     */
     @Override
     public View getView(int position, View view, ViewGroup viewGroup)
     {

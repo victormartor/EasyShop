@@ -12,27 +12,46 @@ import java.net.Socket;
 import java.net.SocketException;
 
 /**
- * Autor: Víctor Martín Torres - 30/8/17
- *
  * Clase que se encarga de realizar la conexión con la aplicación de PC
+ * @author Víctor Martín Torres
  */
-public class SocketStream extends Socket {
+public class SocketStream extends Socket
+{
     private Socket socket;
     private BufferedReader entrada;
     private PrintWriter salida;
 
-    SocketStream(String maquinaAceptadora,int puertoAceptador ) throws SocketException,IOException {
+    /**
+     * Constructor encargado de crear el socket y establecer los flujos de entrada y salida
+     * @param maquinaAceptadora IP del Servidor
+     * @param puertoAceptador puerto
+     * @throws SocketException Error al crear el socket
+     * @throws IOException error al establecer los flujos
+     */
+    SocketStream(String maquinaAceptadora,int puertoAceptador ) throws SocketException,IOException
+    {
         socket = new Socket();
         socket.connect(new InetSocketAddress(maquinaAceptadora, puertoAceptador), 5000);
         establecerFlujos( );
     }
 
-    SocketStream(Socket socket) throws IOException {
+    /**
+     * Constructor que copia un socket ya creado
+     * @param socket el socket ya creado
+     * @throws IOException error al establecer los flujos
+     */
+    SocketStream(Socket socket) throws IOException
+    {
         this.socket = socket;
         establecerFlujos( );
     }
 
-    private void establecerFlujos( ) throws IOException{
+    /**
+     * Establece los flujos de entrada y salida
+     * @throws IOException error al establecer los flujos
+     */
+    private void establecerFlujos( ) throws IOException
+    {
         // obtiene un flujo de salida para leer del socket de datos
         InputStream flujoEntrada = socket.getInputStream();
         entrada = new BufferedReader(new InputStreamReader(flujoEntrada));
@@ -41,7 +60,13 @@ public class SocketStream extends Socket {
         salida = new PrintWriter(new OutputStreamWriter(flujoSalida));
     }
 
-    public void enviaMensaje(String mensaje) throws IOException {
+    /**
+     * Envía un mensaje al servidor de tipo String
+     * @param mensaje el mensaje al enviar
+     * @throws IOException error al conectar con el servidor
+     */
+    public void enviaMensaje(String mensaje) throws IOException
+    {
         salida.println(mensaje);
         // La subsiguiente llamada al método flush es necesaria para que
         // los datos se escriban en el flujo de datos del socket antes
@@ -49,7 +74,13 @@ public class SocketStream extends Socket {
         salida.flush();
     } // fin de enviaMensaje
 
-    public String recibeMensaje( )  throws IOException {
+    /**
+     * Recibe un mensaje del servidor de tipo String
+     * @return el mensaje recibido
+     * @throws IOException error al conectar con el servidor
+     */
+    public String recibeMensaje( )  throws IOException
+    {
         // lee una línea del flujo de datos
         String mensaje = entrada.readLine();
         return mensaje;

@@ -5,9 +5,8 @@ import android.graphics.Bitmap;
 import java.util.ArrayList;
 
 /**
- * Autor: Víctor Martín Torres - 30/8/17
- *
  * Clase que representa la existencia de un Artículo
+ * @author Víctor Martín Torres
  */
 public class Articulo
 {
@@ -20,20 +19,37 @@ public class Articulo
 
     private Imagen _imagen;
 
-    //Constructor para obtener lo minimo para la lista de artículos
-    public Articulo(int iId, double dPVP){
+    /**
+     * Constructor para obtener lo minimo para la lista de artículos
+     * @param iId el Id del artículo
+     * @param dPVP el precio del artículo
+     */
+    public Articulo(int iId, double dPVP)
+    {
         _iId = iId;
         _dPVP = dPVP;
     }
 
-    //Constructor para obtener lo minimo para la lista de combinaciones
-    public Articulo(int iId, int iId_Marca, int iId_Categoria){
+    /**
+     * Constructor para obtener lo minimo para la lista de combinaciones
+     * @param iId el Id del artículo
+     * @param iId_Marca el Id de la marca
+     * @param iId_Categoria el Id de la Categoría
+     */
+    public Articulo(int iId, int iId_Marca, int iId_Categoria)
+    {
         _iId = iId;
         _iId_Marca = iId_Marca;
         _iId_Categoria = iId_Categoria;
     }
 
-    //Constructor completo
+    /**
+     * Constructor completo
+     * @param iId el Id del artículo
+     * @param sNombre el nombre del artículo
+     * @param dPVP el precio del artículo
+     * @param bTalla_Es_Numero indica si las tallas son números
+     */
     public Articulo(int iId, String sNombre, double dPVP, boolean bTalla_Es_Numero)
     {
         _iId = iId;
@@ -52,38 +68,13 @@ public class Articulo
     public int getId_Categoria() {return _iId_Categoria;}
 
     public Imagen getImagen() { return _imagen; }
+
+    /**
+     * devuelve un objeto Bitmap de la imagen característica del artículo
+     * @return
+     */
     public Bitmap getImagenBitmap(){return _imagen.getBitmap();}
 
     //SET
     public void setImagen(Imagen imagen){_imagen = imagen;}
-
-
-    //METODOS
-    /*
-    public void insertarCategoria(Categoria cat) { categorias.add(cat);}
-
-    public Categoria[] getCategoriasVector()
-    {
-        int n = categorias.size();
-        Categoria[] vector = new Categoria[n];
-
-        for (int i=0; i<n; i++)
-        {
-            vector[i] = categorias.get(i);
-        }
-
-        return  vector;
-    }
-
-    @Nullable
-    public static Marca getMarcadeLista(Marca[] lista, int id)
-    {
-        for (Marca item : lista) {
-            if (item.getId() == id) {
-                return item;
-            }
-        }
-        return null;
-    }
-    */
 }

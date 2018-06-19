@@ -13,10 +13,9 @@ import victor.easyshop.R;
 import victor.easyshop.clases.Articulo_Color;
 import victor.easyshop.clases.Imagen;
 
-/*
- * Autor: Víctor Martín Torres - 18/9/17
- *
- * Clase AdaptadorDeColores: adaptador para personalizar la vista de los colores en la ActividadDetalle
+/**
+ * Adaptador para personalizar la vista de los colores en la ActividadDetalle
+ * @author Víctor Martín Torres
  */
 public class Articulo_ColorAdapter
         extends RecyclerView.Adapter<Articulo_ColorAdapter.Articulo_ColorAdapterViewHolder>
@@ -26,6 +25,9 @@ public class Articulo_ColorAdapter
     private ArrayList<Articulo_Color> datos;
     private static int creado;
 
+    /**
+     * Clase ViewHolder
+     */
     static class Articulo_ColorAdapterViewHolder extends RecyclerView.ViewHolder
     {
         private ImageView imagen;
@@ -60,7 +62,13 @@ public class Articulo_ColorAdapter
         }
     }
 
-    public Articulo_ColorAdapter(ArrayList<Articulo_Color> datos) throws IOException{
+    /**
+     * Constructor
+     * @param datos Array con los datos para la lista
+     * @throws IOException Error al cargar las imagenes
+     */
+    public Articulo_ColorAdapter(ArrayList<Articulo_Color> datos) throws IOException
+    {
         int n = datos.size();
         this.datos = datos;
         for(Articulo_Color a_c : datos)
@@ -70,6 +78,12 @@ public class Articulo_ColorAdapter
         creado = 0;
     }
 
+    /**
+     * Crear el ViewHolder
+     * @param viewGroup grupo de viewholders
+     * @param viewType tipo de view
+     * @return Devuelve el ViewHolder creado
+     */
     @Override
     public Articulo_ColorAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType)
     {
@@ -81,6 +95,11 @@ public class Articulo_ColorAdapter
         return new Articulo_ColorAdapterViewHolder(itemView);
     }
 
+    /**
+     * Recargar el viewholder cuando aparezca en pantalla
+     * @param viewHolder el viewholder
+     * @param pos la posicion
+     */
     @Override
     public void onBindViewHolder(Articulo_ColorAdapterViewHolder viewHolder, int pos)
     {
@@ -89,15 +108,29 @@ public class Articulo_ColorAdapter
         viewHolder.bindColor(item, pos);
     }
 
+    /**
+     * El número de elementos de la lista
+     * @return tamaño de la lista
+     */
     @Override
-    public int getItemCount() {
+    public int getItemCount()
+    {
         return datos.size();
     }
 
-    public void setOnClickListener(View.OnClickListener listener) {
+    /**
+     * Escuchar acción hacia el elemento
+     * @param listener encargado de escuchar la acción
+     */
+    public void setOnClickListener(View.OnClickListener listener)
+    {
         this.listener = listener;
     }
 
+    /**
+     * Acción al pulsar en un elemento
+     * @param view la vista
+     */
     @Override
     public void onClick(View view)
     {
@@ -105,12 +138,24 @@ public class Articulo_ColorAdapter
             listener.onClick(view);
     }
 
-    public Articulo_Color getItem(int position) {
+    /**
+     * Obtener un elemento de la lista
+     * @param position la posicion del elemento
+     * @return el elemento
+     */
+    public Articulo_Color getItem(int position)
+    {
         return datos.get(position);
     }
 
+    /**
+     * Obtener el id de un elemento de la lista
+     * @param index la posicion
+     * @return el id del elemento en esa posicion
+     */
     @Override
-    public long getItemId(int index){
+    public long getItemId(int index)
+    {
         return datos.get(index).getId();
     }
 }

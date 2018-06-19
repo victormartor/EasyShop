@@ -4,46 +4,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Autor: Víctor Martín Torres - 30/8/17
- *
- * Clase que se encarga de enviar los datos del pedido a la aplicación para PC
+ * Clase que se encarga de conectar con el servidor e interactuar con él
+ * @author Víctor Martín Torres
  */
 public class Cliente
 {
-    /*
-    public static void conectar(String nombreMaquina, String numPuerto, Carro carro) throws Exception
+    /**
+     * Comprobar la conexión con el servidor
+     * @param sIP_Servidor la IP del servidor
+     * @param sPuerto el puerto
+     * @return Devuelve "conectado" si la conexión es correcta
+     * @throws IOException error al conectar
+     */
+    public static String conectar(String sIP_Servidor, String sPuerto) throws IOException
     {
-        int puertoServidor = Integer.parseInt(numPuerto);
-        MiSocketStream miSocket = new MiSocketStream(nombreMaquina, puertoServidor);
-        String mensaje ="";
-
-        //Columna con la lista de precios
-        float total = 0;
-
-        //mensaje += "NUMERO DE CLIENTE:\n";
-        mensaje += numCliente+"\n-\n";
-        for(Carro.ArticuloCarrito a : carro.getArticulos())
-        {
-            mensaje +=
-                    a.getMarca()+"\n"+
-                            a.getNombre()+"\n"+
-                            a.getReferencia()+ "-"+a.getColor().hashCode()+"-"+a.getTalla()+"\n"+
-                            String.format(Locale.ENGLISH,"%.2f",a.getPrecio())+"\n"+
-                            "-\n";
-
-            total += a.getPrecio();
-        }
-
-        mensaje += "$\n";
-        mensaje += String.format(Locale.ENGLISH,"%.2f",total)+"\n";
-        mensaje += "FinTicket\n";
-        miSocket.enviaMensaje(mensaje);
-
-        miSocket.close( ); // implica la desconexión
-    } // fin
-    */
-
-    public static String conectar(String sIP_Servidor, String sPuerto) throws IOException {
         String sRespuesta = null;
         int iPuerto = Integer.parseInt(sPuerto);
         SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
@@ -54,7 +28,15 @@ public class Cliente
         return sRespuesta;
     }
 
-    public static ArrayList<Marca> getMarcas(String sIP_Servidor, String sPuerto) throws IOException {
+    /**
+     * Obtener la lista de todas las marcas
+     * @param sIP_Servidor la IP del servidor
+     * @param sPuerto el puerto
+     * @return devuelve una lista con todas las marcas
+     * @throws IOException error al conectar
+     */
+    public static ArrayList<Marca> getMarcas(String sIP_Servidor, String sPuerto) throws IOException
+    {
         String sRespuesta = null;
         int iPuerto = Integer.parseInt(sPuerto);
         SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
@@ -79,7 +61,17 @@ public class Cliente
         return aMarcas;
     }
 
-    public static Marca getMarca(Integer iId_Marca, String sIP_Servidor, String sPuerto) throws IOException {
+    /**
+     * Obtener los datos de una marca
+     * @param iId_Marca el Id de la marca
+     * @param sIP_Servidor la IP del servidor
+     * @param sPuerto el puerto
+     * @return Objeto de tipo marca
+     * @throws IOException error al conectar
+     */
+    public static Marca getMarca(Integer iId_Marca, String sIP_Servidor, String sPuerto)
+            throws IOException
+    {
         String sRespuesta = null;
         int iPuerto = Integer.parseInt(sPuerto);
         SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
@@ -99,7 +91,17 @@ public class Cliente
         return marca;
     }
 
-    public static ArrayList<Categoria> getCategorias(Integer iId_Marca, String sIP_Servidor, String sPuerto) throws IOException {
+    /**
+     * Obtener una lista de todas las categorías de una marca
+     * @param iId_Marca el Id de la marca
+     * @param sIP_Servidor la IP del servidor
+     * @param sPuerto el puerto
+     * @return lista de todas las categorías de una marca
+     * @throws IOException error al conectar
+     */
+    public static ArrayList<Categoria> getCategorias(Integer iId_Marca, String sIP_Servidor,
+                                                     String sPuerto) throws IOException
+    {
         String sRespuesta = null;
         int iPuerto = Integer.parseInt(sPuerto);
         SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
@@ -126,7 +128,17 @@ public class Cliente
         return aCategorias;
     }
 
-    public static ArrayList<Articulo> getArticulos(Integer iId_Categoria, String sIP_Servidor, String sPuerto) throws IOException {
+    /**
+     * Obtener todos los artículos de una categoría
+     * @param iId_Categoria el Id de la categoría
+     * @param sIP_Servidor la IP del servidor
+     * @param sPuerto el puerto
+     * @return lista de todos los artículos de una categoría
+     * @throws IOException error al conectar
+     */
+    public static ArrayList<Articulo> getArticulos(Integer iId_Categoria, String sIP_Servidor,
+                                                   String sPuerto) throws IOException
+    {
         String sRespuesta = null;
         int iPuerto = Integer.parseInt(sPuerto);
         SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
@@ -152,7 +164,17 @@ public class Cliente
         return aArticulos;
     }
 
-    public static Articulo getUnArticulo(Integer iId_Articulo, String sIP_Servidor, String sPuerto) throws IOException {
+    /**
+     * Obtener los datos de un artículo
+     * @param iId_Articulo el Id del artículo
+     * @param sIP_Servidor la IP del servidor
+     * @param sPuerto el puerto
+     * @return un objeto de tipo Articulo
+     * @throws IOException error al conectar
+     */
+    public static Articulo getUnArticulo(Integer iId_Articulo, String sIP_Servidor, String sPuerto)
+            throws IOException
+    {
         String sRespuesta = null;
         int iPuerto = Integer.parseInt(sPuerto);
         SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
@@ -173,7 +195,18 @@ public class Cliente
         return articulo;
     }
 
-    public static ArrayList<Articulo_Color> getColoresArticulo(Integer iId_Articulo, String sIP_Servidor, String sPuerto) throws IOException {
+    /**
+     * Obtener todos los colores asociados a un artículo
+     * @param iId_Articulo el Id del artículo
+     * @param sIP_Servidor la IP del servidor
+     * @param sPuerto el puerto
+     * @return lista de colores asociados
+     * @throws IOException error al conectar
+     */
+    public static ArrayList<Articulo_Color> getColoresArticulo(Integer iId_Articulo,
+                                                               String sIP_Servidor, String sPuerto)
+            throws IOException
+    {
         String sRespuesta = null;
         int iPuerto = Integer.parseInt(sPuerto);
         SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
@@ -206,7 +239,18 @@ public class Cliente
         return aColores;
     }
 
-    public static ArrayList<Articulo_Talla> getTallasArticulo(Integer iId_Articulo, String sIP_Servidor, String sPuerto) throws IOException {
+    /**
+     * Obtener todas las tallas asociadas a un artículo
+     * @param iId_Articulo el Id del artículo
+     * @param sIP_Servidor la IP del servidor
+     * @param sPuerto el puerto
+     * @return lista de tallas asociadas
+     * @throws IOException error al conectar
+     */
+    public static ArrayList<Articulo_Talla> getTallasArticulo(Integer iId_Articulo,
+                                                              String sIP_Servidor, String sPuerto)
+            throws IOException
+    {
         String sRespuesta = null;
         int iPuerto = Integer.parseInt(sPuerto);
         SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
@@ -226,7 +270,18 @@ public class Cliente
         return aTallas;
     }
 
-    public static ArrayList<Articulo> getCombinacionesArticulo(Integer iId_Articulo, String sIP_Servidor, String sPuerto) throws IOException {
+    /**
+     * Obtener todos los artículos que combnan con un artículo
+     * @param iId_Articulo el Id del artículo
+     * @param sIP_Servidor la IP del servidor
+     * @param sPuerto el puerto
+     * @return lista de combinaciones
+     * @throws IOException error al conectar
+     */
+    public static ArrayList<Articulo> getCombinacionesArticulo(Integer iId_Articulo,
+                                                               String sIP_Servidor, String sPuerto)
+            throws IOException
+    {
         String sRespuesta = null;
         int iPuerto = Integer.parseInt(sPuerto);
         SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);
@@ -252,7 +307,17 @@ public class Cliente
         return aComb;
     }
 
-    public static Integer enviaCompra(Carrito carrito, String sIP_Servidor, String sPuerto) throws IOException {
+    /**
+     * Enviar ticket de compra
+     * @param carrito carrito con todos los artículos elegidos
+     * @param sIP_Servidor la IP del servidor
+     * @param sPuerto el puerto
+     * @return el número del cliente
+     * @throws IOException error al conectar
+     */
+    public static Integer enviaCompra(Carrito carrito, String sIP_Servidor, String sPuerto)
+            throws IOException
+    {
         String sRespuesta = null;
         int iPuerto = Integer.parseInt(sPuerto);
         SocketStream socketStream = new SocketStream(sIP_Servidor, iPuerto);

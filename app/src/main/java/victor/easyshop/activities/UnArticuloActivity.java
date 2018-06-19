@@ -34,9 +34,7 @@ import victor.easyshop.clases.Marca;
 import victor.easyshop.data.EasyShop;
 
 /**
- * Autor: Víctor Martín Torres - 30/8/17
- *
- * Clase ActividadDetalle: muestra la imagen del artículo en grande y sus características a la derecha. Bajo las
+ * Muestra la imagen del artículo en grande y sus características a la derecha. Bajo las
  * características se encuentra el botón para añadir el artículo al carrito. Debajo se encuentran la lista
  * de colores y la lista de tallas.
  *
@@ -45,6 +43,8 @@ import victor.easyshop.data.EasyShop;
  *    -un botón con la imagen de la marca que si es presionado lleva directamente a las categorías de la marca.
  *    -un botón para acceder al carrito.
  *    -un botón con el icono de la aplicación que lleva al menú de marcas.
+ *
+ * @author Víctor Martín Torres
  */
 public class UnArticuloActivity extends AppCompatActivity
 {
@@ -66,8 +66,9 @@ public class UnArticuloActivity extends AppCompatActivity
 
     //posicion de la imagen en la galería
     int numImagen;
+
+    //posicion de la talla
     int numTalla;
-    //int numColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -80,64 +81,15 @@ public class UnArticuloActivity extends AppCompatActivity
 
         //Inicializar atributos
         numImagen = 0;
-        //numColor = 0;
         numTalla = 0;
         new cargarArticulo().execute(getIntent().getIntExtra(EXTRA_MARCA, 0),
                                    getIntent().getIntExtra(EXTRA_ARTICULO, 0));
-        //new cargarTallas().execute(getIntent().getIntExtra(EXTRA_ARTICULO, 0));
-        //new cargarColores().execute(getIntent().getIntExtra(EXTRA_ARTICULO, 0));
-        /*
-        Marca marca = Marca.getMarcadeLista(ActividadSplash.basedeDatos.getMarcas(),getIntent().getIntExtra(EXTRA_MARCA, 0));
-        Categoria categoria = Categoria.getCategoriadeLista(marca.getCategoriasVector(), getIntent().getIntExtra(EXTRA_CATEGORIA, 0));
-        Articulo articulo = Articulo.getArticulodeLista(categoria.getArticulosVector(),getIntent().getIntExtra(EXTRA_ARTICULO,0));
-        mArticulo = new Articulo(articulo);
-        */
-
-        // Imagenes del articulo
-        /*
-        numImagen = 0;
-        numColor = 0;
-        //cargarColores tarea = new cargarColores();
-        cargarColores_v2 tarea = new cargarColores_v2();
-        tarea.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        */
-
-        //Imagen de la marca
-        /*
-        ImageView imagenMarca = (ImageView) findViewById(R.id.imageViewMarca);
-        imagenMarca.setImageBitmap(marca.getImagenBitmap());
-        */
-
-
-
-        //Botones de las tallas
-        /*
-        numTalla = 0;
-        cargarTallas_v2 tarea2 = new cargarTallas_v2();
-        tarea2.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-        mArticulo.setTalla(mArticulo.getTallas().get(numTalla));
-        */
 
         //Inactividad
         reiniciar_inactividad();
-        //if(inactividad != null) inactividad.onProgressUpdate(this);
-
-        //Botones de las flechas
-        //setFlechas();
 
         //Carrito
         actualizar_carrito();
-        /*
-        TextView num_art_carrito = (TextView)findViewById(R.id.numero_art_carrito);
-        int n = carrito.getArticulos().size();
-        if (n > 0)
-        {
-            num_art_carrito.setVisibility(View.VISIBLE);
-            num_art_carrito.setText(String.format(Locale.ENGLISH,"%d",n));
-        }
-        else num_art_carrito.setVisibility(View.INVISIBLE);
-        */
 
         //Texto mas info tallas
         TextView texto_info_tallas = findViewById(R.id.mas_info_tallas);
@@ -150,7 +102,9 @@ public class UnArticuloActivity extends AppCompatActivity
 
     //CARGAR DATOS//////////////////////////////////////
 
-    //clase cargar un articulo
+    /**
+     * clase cargar un articulo
+     */
     private class cargarArticulo extends AsyncTask<Integer, Void, Void>
     {
         ProgressDialog _pDialog;
@@ -165,8 +119,11 @@ public class UnArticuloActivity extends AppCompatActivity
             String sIP_Servidor = ((EasyShop)getApplicationContext()).getIP_Servidor();
             String sPuerto = "5000";
             try {
+                //cargar imagen de la marca
                 _marca = Cliente.getMarca(iId_Marca, sIP_Servidor, sPuerto);
                 _marca.getImagen().cargarImagen();
+
+                //cargar imagenes
                 _Articulo = Cliente.getUnArticulo(iId_Articulo, sIP_Servidor, sPuerto);
                 _sRespuesta = "conectado";
             } catch (Exception e) {
@@ -182,8 +139,8 @@ public class UnArticuloActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onPreExecute() {
-
+        protected void onPreExecute()
+        {
             _sRespuesta = "";
             _pDialog = new ProgressDialog(UnArticuloActivity.this);
             _pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -221,12 +178,12 @@ public class UnArticuloActivity extends AppCompatActivity
                 String precio = String.format("%.2f",_Articulo.getPVP())+" €";
                 textoPrecio.setText(precio);
 
-                //new cargarColores().execute(_Articulo.getId());
                 new cargarTallas().execute(_Articulo.getId());
             }
             else{
                 Toast toast = Toast.makeText(UnArticuloActivity.this,
-                        getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
+                        getString(R.string.error_conexion)+"\n"
+                                +_sRespuesta, Toast.LENGTH_SHORT);
                 toast.show();
                 findViewById(R.id.datos_articulo).setVisibility(View.INVISIBLE);
                 findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
@@ -234,17 +191,21 @@ public class UnArticuloActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onCancelled() {
+        protected void onCancelled()
+        {
             _pDialog.dismiss();
             Toast toast = Toast.makeText(UnArticuloActivity.this,
-                    getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
+                    getString(R.string.error_conexion)+"\n"
+                            +_sRespuesta, Toast.LENGTH_SHORT);
             toast.show();
             findViewById(R.id.datos_articulo).setVisibility(View.INVISIBLE);
             findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
         }
     }
 
-    //clase cargar colores
+    /**
+     * clase cargar colores
+     */
     private class cargarColores extends AsyncTask<Integer, Void, Articulo_ColorAdapter>
     {
         ProgressDialog pDialog;
@@ -273,8 +234,8 @@ public class UnArticuloActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onPreExecute() {
-
+        protected void onPreExecute()
+        {
             pDialog = new ProgressDialog(UnArticuloActivity.this);
             pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             pDialog.setMessage(getString(R.string.cargando));
@@ -284,7 +245,8 @@ public class UnArticuloActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onPostExecute(Articulo_ColorAdapter adaptador) {
+        protected void onPostExecute(Articulo_ColorAdapter adaptador)
+        {
             pDialog.dismiss();
             if(adaptador != null){
                 despliega_colores(adaptador);
@@ -307,26 +269,30 @@ public class UnArticuloActivity extends AppCompatActivity
             }
             else{
                 Toast toast = Toast.makeText(UnArticuloActivity.this,
-                        getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
+                        getString(R.string.error_conexion)+"\n"
+                                +_sRespuesta, Toast.LENGTH_SHORT);
                 toast.show();
                 findViewById(R.id.datos_articulo).setVisibility(View.INVISIBLE);
                 findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
             }
-            //new cargarTallas().execute();
         }
 
         @Override
-        protected void onCancelled() {
+        protected void onCancelled()
+        {
             pDialog.dismiss();
             Toast toast = Toast.makeText(UnArticuloActivity.this,
-                    getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
+                    getString(R.string.error_conexion)+"\n"
+                            +_sRespuesta, Toast.LENGTH_SHORT);
             toast.show();
             findViewById(R.id.datos_articulo).setVisibility(View.INVISIBLE);
             findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
         }
     }
 
-    //clase cargar tallas
+    /**
+     * clase cargar tallas
+     */
     private class cargarTallas extends AsyncTask<Integer, Void, Articulo_TallaAdapter>
     {
         ProgressDialog pDialog;
@@ -340,7 +306,8 @@ public class UnArticuloActivity extends AppCompatActivity
             String sPuerto = "5000";
             try {
                 Articulo_TallaAdapter adaptador = new Articulo_TallaAdapter(
-                        Cliente.getTallasArticulo(iId_Articulo, sIP_Servidor, sPuerto), _Articulo.getTalla_Es_Numero());
+                        Cliente.getTallasArticulo(iId_Articulo, sIP_Servidor, sPuerto),
+                        _Articulo.getTalla_Es_Numero());
                 return adaptador;
             } catch (Exception e) {
                 _sRespuesta = e.toString();
@@ -355,8 +322,8 @@ public class UnArticuloActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onPreExecute() {
-
+        protected void onPreExecute()
+        {
             pDialog = new ProgressDialog(UnArticuloActivity.this);
             pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             pDialog.setMessage(getString(R.string.cargando));
@@ -366,7 +333,8 @@ public class UnArticuloActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onPostExecute(Articulo_TallaAdapter adaptador) {
+        protected void onPostExecute(Articulo_TallaAdapter adaptador)
+        {
             pDialog.dismiss();
 
             if(adaptador!= null){
@@ -378,7 +346,8 @@ public class UnArticuloActivity extends AppCompatActivity
             else
             {
                 Toast toast = Toast.makeText(UnArticuloActivity.this,
-                        getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
+                        getString(R.string.error_conexion)+"\n"
+                                +_sRespuesta, Toast.LENGTH_SHORT);
                 toast.show();
                 findViewById(R.id.datos_articulo).setVisibility(View.INVISIBLE);
                 findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
@@ -386,10 +355,12 @@ public class UnArticuloActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onCancelled() {
+        protected void onCancelled()
+        {
             pDialog.dismiss();
             Toast toast = Toast.makeText(UnArticuloActivity.this,
-                    getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
+                    getString(R.string.error_conexion)+"\n"
+                            +_sRespuesta, Toast.LENGTH_SHORT);
             toast.show();
             findViewById(R.id.datos_articulo).setVisibility(View.INVISIBLE);
             findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
@@ -398,10 +369,14 @@ public class UnArticuloActivity extends AppCompatActivity
 
     //MODIFICADORES////////////////////////////////////
 
-    //Función para desplegar la lista de colores
+    /**
+     * Función para desplegar la lista de colores
+     * @param adaptador el adaptador de Articulo_Color
+     */
     public void despliega_colores(Articulo_ColorAdapter adaptador)
     {
-        LinearLayoutManager layoutManager= new LinearLayoutManager(UnArticuloActivity.this,LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager= new LinearLayoutManager(UnArticuloActivity.this,
+                LinearLayoutManager.HORIZONTAL, false);
         RecyclerView mRecyclerView = findViewById(R.id.lista_colores);
         mRecyclerView.setLayoutManager(layoutManager);
         adaptador.setOnClickListener(new ClickColor());
@@ -409,7 +384,10 @@ public class UnArticuloActivity extends AppCompatActivity
     }
 
 
-    //Función para desplegar la lista de tallas
+    /**
+     * Función para desplegar la lista de tallas
+     * @param adaptador el adaptador de Articulo_Talla
+     */
     public void despliega_tallas(Articulo_TallaAdapter adaptador)
     {
         LinearLayoutManager layoutManager= new LinearLayoutManager(UnArticuloActivity.this,LinearLayoutManager.HORIZONTAL, false);
@@ -419,20 +397,14 @@ public class UnArticuloActivity extends AppCompatActivity
         mRecyclerView.setAdapter(adaptador);
     }
 
-    //Acción al pulsar uno de los colores de la lista
+    /**
+     * Acción al pulsar uno de los colores de la lista
+     */
     private class ClickColor implements View.OnClickListener
     {
         @Override
         public void onClick(View view)
         {
-            /*
-            if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-            {
-                inactividad = new Inactividad();
-                inactividad.execute(ActividadDetalle.this);
-            }
-            inactividad.onProgressUpdate(ActividadDetalle.this);
-            */
             reiniciar_inactividad();
 
             RecyclerView mRecyclerView = findViewById(R.id.lista_colores);
@@ -444,7 +416,8 @@ public class UnArticuloActivity extends AppCompatActivity
                 View mView = mRecyclerView.getChildAt(i);
                 if(mView!=null) mView.findViewById(R.id.seleccionado).setVisibility(View.INVISIBLE);
             }
-            mRecyclerView.findContainingItemView(view).findViewById(R.id.seleccionado).setVisibility(View.VISIBLE);
+            mRecyclerView.findContainingItemView(view).findViewById(R.id.seleccionado)
+                    .setVisibility(View.VISIBLE);
 
             ImageView imagenColor = findViewById(R.id.imagen_extendida);
             imagenColor.setImageBitmap(Color_Sel.getImagenes().get(0).getBitmap());
@@ -454,20 +427,14 @@ public class UnArticuloActivity extends AppCompatActivity
         }
     }
 
-    //Acción al pulsar uno de los colores de la lista
+    /**
+     * Acción al pulsar una de las tallas de la lista
+     */
     private class ClickTalla implements View.OnClickListener
     {
         @Override
         public void onClick(View view)
         {
-            /*
-            if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-            {
-                inactividad = new Inactividad();
-                inactividad.execute(ActividadDetalle.this);
-            }
-            inactividad.onProgressUpdate(ActividadDetalle.this);
-            */
             reiniciar_inactividad();
 
             RecyclerView mRecyclerView = findViewById(R.id.lista_tallas);
@@ -478,37 +445,27 @@ public class UnArticuloActivity extends AppCompatActivity
                 View mView = mRecyclerView.getChildAt(i);
                 if(mView!=null) mView.findViewById(R.id.seleccionado).setVisibility(View.INVISIBLE);
             }
-            mRecyclerView.findContainingItemView(view).findViewById(R.id.seleccionado).setVisibility(View.VISIBLE);
+            mRecyclerView.findContainingItemView(view).findViewById(R.id.seleccionado)
+                    .setVisibility(View.VISIBLE);
 
-            //actualizar_tallas(talla);
-            //mArticulo.setTalla(talla);
             Talla_Sel = adapter.getItem(n);
         }
     }
 
-    //Acción al pulsar la flecha hacia la izquierda
-
+    /**
+     * Acción al pulsar la flecha hacia la izquierda
+     * @param view la vista
+     */
     public void anteriorImagen(View view)
     {
         RecyclerView mRecyclerView = findViewById(R.id.lista_colores);
-        //Articulo_Color articulo_color = ((Articulo_ColorAdapter)mRecyclerView.getAdapter()).getItem(numColor);
 
         if(numImagen > 0)
         {
-            /*
-            if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-            {
-                inactividad = new Inactividad();
-                inactividad.execute(this);
-            }
-
-            inactividad.onProgressUpdate(this);
-            */
             reiniciar_inactividad();
 
             numImagen--;
             ImageView imagenArticulo = findViewById(R.id.imagen_extendida);
-            //imagenArticulo.setImageBitmap(mArticulo.getColor().getImagenBitMap(numImagen));
             imagenArticulo.setImageBitmap(Color_Sel.getImagenes().get(numImagen).getBitmap());
 
             setFlechas();
@@ -516,26 +473,19 @@ public class UnArticuloActivity extends AppCompatActivity
         }
     }
 
-    //Acción al pulsar la flecha hacia la derecha
+    /**
+     * Acción al pulsar la flecha hacia la derecha
+     * @param view la vista
+     */
     public void siguienteImagen(View view)
     {
         RecyclerView mRecyclerView = findViewById(R.id.lista_colores);
-        //Articulo_Color articulo_color = ((Articulo_ColorAdapter)mRecyclerView.getAdapter()).getItem(numColor);
         if(numImagen < Color_Sel.getImagenes().size()-1)
         {
-            /*
-            if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-            {
-                inactividad = new Inactividad();
-                inactividad.execute(this);
-            }
-            inactividad.onProgressUpdate(this);
-            */
             reiniciar_inactividad();
 
             numImagen++;
             ImageView imagenArticulo = findViewById(R.id.imagen_extendida);
-            //imagenArticulo.setImageBitmap(mArticulo.getColor().getImagenBitMap(numImagen));
             imagenArticulo.setImageBitmap(Color_Sel.getImagenes().get(numImagen).getBitmap());
 
             setFlechas();
@@ -544,16 +494,21 @@ public class UnArticuloActivity extends AppCompatActivity
 
     }
 
-    //desplegar circulos
+    /**
+     * desplegar circulos
+     */
     public void despliega_circulos()
     {
-        LinearLayoutManager layoutManager= new LinearLayoutManager(UnArticuloActivity.this,LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager= new LinearLayoutManager(UnArticuloActivity.this,
+                LinearLayoutManager.HORIZONTAL, false);
         RecyclerView mRecyclerView = findViewById(R.id.lista_circulos);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(new CirculoAdapter(Color_Sel.getImagenes().size()));
     }
 
-    //actualizar circulos
+    /**
+     * actualizar circulos
+     */
     public void actualizar_circulos()
     {
         RecyclerView circulos = findViewById(R.id.lista_circulos);
@@ -571,7 +526,9 @@ public class UnArticuloActivity extends AppCompatActivity
         img.setImageResource(R.drawable.ic_circle_on);
     }
 
-    //Funcion para hacer visibles las flechas o no según el artículo
+    /**
+     * Funcion para hacer visibles las flechas o no según el artículo
+     */
     public void setFlechas()
     {
         View flechaIzq = findViewById(R.id.boton_izq);
@@ -604,90 +561,63 @@ public class UnArticuloActivity extends AppCompatActivity
         }
     }
 
-    //Acción al pulsar el boton menos en la talla
+    /**
+     * Acción al pulsar el boton menos en la talla
+     * @param view la vista
+     */
     public void talla_menos(View view)
     {
         RecyclerView mRecyclerView = findViewById(R.id.lista_tallas);
         Articulo_TallaAdapter adapter = (Articulo_TallaAdapter)mRecyclerView.getAdapter();
         if(numTalla > 0)
         {
-            /*
-            if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-            {
-                inactividad = new Inactividad();
-                inactividad.execute(this);
-            }
-            inactividad.onProgressUpdate(this);
-            */
             reiniciar_inactividad();
             numTalla--;
             Talla_Sel = adapter.getItem(numTalla);
 
-            //actualizar_tallas(mArticulo.getTallas().get(numTalla));
-            //RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.lista_tallas);
             TextView textView = mRecyclerView.getChildAt(0).findViewById(R.id.numero_talla);
             textView.setText(Talla_Sel.getNombre());
-
-            //mArticulo.setTalla(mArticulo.getTallas().get(numTalla));
         }
     }
 
-    //Acción al pulsar el boton mas en la talla
+    /**
+     * Acción al pulsar el boton mas en la talla
+     * @param view la vista
+     */
     public void talla_mas(View view)
     {
         RecyclerView mRecyclerView = findViewById(R.id.lista_tallas);
         Articulo_TallaAdapter adapter = (Articulo_TallaAdapter)mRecyclerView.getAdapter();
         if(numTalla < adapter.getArraySize()-1)
         {
-            /*
-            if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-            {
-                inactividad = new Inactividad();
-                inactividad.execute(this);
-            }
-            inactividad.onProgressUpdate(this);
-            */
             reiniciar_inactividad();
             numTalla++;
             Talla_Sel = adapter.getItem(numTalla);
 
-            //actualizar_tallas(mArticulo.getTallas().get(numTalla));
-            //RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.lista_tallas);
             TextView textView = mRecyclerView.getChildAt(0).findViewById(R.id.numero_talla);
             textView.setText(Talla_Sel.getNombre());
-
-            //mArticulo.setTalla(mArticulo.getTallas().get(numTalla));
         }
     }
 
     //NAVEGAR A OTRA ACTIVIDAD/////////////////////////
 
-    //Acción al pulsar en la imagen del artículo
+    /**
+     * Acción al pulsar en la imagen del artículo
+     * @param view la vista
+     */
     public void ampliar(View view)
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
         Intent intent = new Intent(this, ImagenActivity.class);
         intent.putExtra(ImagenActivity.EXTRA_IMAGEN, Color_Sel.getImagenes().get(numImagen).getUrl());
         startActivityForResult(intent,0);
     }
 
-    //Acción al pulsar en el botón de añadir al carrito
+    /**
+     * Acción al pulsar en el botón de añadir al carrito
+     * @param view la vista
+     */
     public void alCarrito(View view)
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
-
         //Insertar cuadro de diálogo para confirmación
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
 
@@ -699,27 +629,17 @@ public class UnArticuloActivity extends AppCompatActivity
         {
             public void onClick(DialogInterface dialogo1, int id)
             {
-                Intent intent = new Intent(UnArticuloActivity.this, CombinacionesActivity.class);
+                Intent intent = new Intent(UnArticuloActivity.this,
+                        CombinacionesActivity.class);
                 intent.putExtra(CombinacionesActivity.EXTRA_ARTICULO, _Articulo.getId());
-                intent.putExtra(CombinacionesActivity.EXTRA_CATEGORIA, getIntent().getIntExtra(EXTRA_CATEGORIA, 0));
-                intent.putExtra(CombinacionesActivity.EXTRA_MARCA, getIntent().getIntExtra(EXTRA_MARCA, 0));
-                /*
-                Color[] colores = mArticulo.getVectorColores();
-                int n = 0;
-                for (int i=0;i<colores.length;i++)
-                {
-                    if (colores[i].getId() == mArticulo.getColor().getId()) n = i;
-                }
-                */
+                intent.putExtra(CombinacionesActivity.EXTRA_CATEGORIA, getIntent()
+                        .getIntExtra(EXTRA_CATEGORIA, 0));
+                intent.putExtra(CombinacionesActivity.EXTRA_MARCA, getIntent()
+                        .getIntExtra(EXTRA_MARCA, 0));
 
                 intent.putExtra(CombinacionesActivity.EXTRA_COLOR, Color_Sel.getId());
                 intent.putExtra(CombinacionesActivity.EXTRA_TALLA, Talla_Sel.getId());
 
-                /*
-                (int iId_Articulo, String sNombre, double dPVP, int iId_Color, String sColor,
-                               int iId_Talla, String sTalla, String sImagenURL,
-                               int iId_Marca, String sMarca, int iId_Categoria)
-                 */
                 Carrito carrito = ((EasyShop)UnArticuloActivity.this.getApplication()).getCarrito();
                 carrito.insertarArticulo(
                         _Articulo.getId(), _Articulo.getNombre(), _Articulo.getPVP(),
@@ -731,7 +651,6 @@ public class UnArticuloActivity extends AppCompatActivity
                         getIntent().getIntExtra(EXTRA_CATEGORIA, 0)
                 );
 
-                //carrito.insertarArticulo(mArticulo);
                 startActivity(intent);
                 finish();
             }
@@ -742,11 +661,14 @@ public class UnArticuloActivity extends AppCompatActivity
         });
 
         dialogo.show();
-
     }
 
-    //MAS INFO TALLAS//////////////////
-    public void info_tallas(View view){
+    /**
+     * MAS INFO TALLAS
+     * @param view la vista
+     */
+    public void info_tallas(View view)
+    {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final AlertDialog dialog = builder.create();
 
@@ -763,7 +685,9 @@ public class UnArticuloActivity extends AppCompatActivity
     //MÉTODOS GENERALES
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //Inactividad
+    /**
+     * Inactividad
+     */
     public void reiniciar_inactividad(){
         Inactividad inactividad = ((EasyShop)this.getApplication()).getInactividad();
         if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
@@ -777,18 +701,24 @@ public class UnArticuloActivity extends AppCompatActivity
         }
     }
 
-    //Cargar datos de nuevo
-    public void recargar(View view){
+    /**
+     * Cargar datos de nuevo
+     * @param view la vista
+     */
+    public void recargar(View view)
+    {
         reiniciar_inactividad();
         findViewById(R.id.datos_articulo).setVisibility(View.VISIBLE);
         findViewById(R.id.button_recargar).setVisibility(View.INVISIBLE);
         new cargarArticulo().execute(getIntent().getIntExtra(EXTRA_MARCA, 0),
                 getIntent().getIntExtra(EXTRA_ARTICULO, 0));
-        //new cargarColores().execute(getIntent().getIntExtra(EXTRA_ARTICULO, 0));
     }
 
-    //Actualizar carrito
-    private void actualizar_carrito(){
+    /**
+     * Actualizar carrito
+     */
+    private void actualizar_carrito()
+    {
         TextView num_art_carrito = findViewById(R.id.numero_art_carrito);
         int n = ((EasyShop)this.getApplication()).getCarrito().getNumArticulos();
         if (n > 0)
@@ -799,7 +729,9 @@ public class UnArticuloActivity extends AppCompatActivity
         else num_art_carrito.setVisibility(View.INVISIBLE);
     }
 
-    //Función para personalizar la Toolbar
+    /**
+     * Función para personalizar la Toolbar
+     */
     private void usarToolbar()
     {
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -809,24 +741,23 @@ public class UnArticuloActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    //Acción del botón para volver atrás
+    /**
+     * Acción del botón para volver atrás
+     * @return true si ha ido correctamente
+     */
     @Override
     public boolean onSupportNavigateUp()
     {
         onBackPressed();
-        return false;
+        return true;
     }
 
-    //Acción al pulsar en la imagen de la marca
+    /**
+     * Acción al pulsar la imagen de la marca
+     * @param view la vista
+     */
     public void iraMarca(View view)
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
         Intent intent = new Intent(this, CategoriasActivity.class);
         intent.putExtra(CategoriasActivity.EXTRA_MARCA, getIntent().getIntExtra(EXTRA_MARCA, 0));
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -834,80 +765,71 @@ public class UnArticuloActivity extends AppCompatActivity
         finish();
     }
 
-    //Acción al pulsar el botón del carrito
+    /**
+     * Acción al pulsar el botón del carrito
+     * @param view la vista
+     */
     public void verCarro(View view)
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
         Intent intent = new Intent(this, CarritoActivity.class);
         startActivityForResult(intent,0);
     }
 
-    //Acción al pulsar el icono de la aplicación
+    /**
+     * Acción al pulsar el icono de la aplicación
+     * @param view la vista
+     */
     public void portada(View view)
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
         Intent intent = new Intent(this, MarcasActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }
 
+    /**
+     * Acción automática al volverse abrir después de cerrarse otra actividad
+     * @param requestCode código entrante
+     * @param resultCode código resultante
+     * @param data datos que necesitan pasarse
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode,resultCode,data);
         reiniciar_inactividad();
-        //inactividad.onProgressUpdate(this);
         actualizar_carrito();
     }
 
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-        _Articulo = null;
-    }
-
+    /**
+     * Acción para volver atrás, dependiendo de si viene de la ventana de combinaciones o de la de
+     * artícuos abrirá una u otra
+     */
     @Override
     public void onBackPressed()
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
-
-
         if (getIntent().getBooleanExtra(EXTRA_COMBINACIONES,false))
         {
             Intent intent = new Intent(UnArticuloActivity.this, CombinacionesActivity.class);
-            intent.putExtra(CombinacionesActivity.EXTRA_ARTICULO, getIntent().getIntExtra(EXTRA_ARTICULO_ANTERIOR,0));
-            intent.putExtra(CombinacionesActivity.EXTRA_MARCA, getIntent().getIntExtra(EXTRA_MARCA_ANTERIOR,0));
-            intent.putExtra(CombinacionesActivity.EXTRA_CATEGORIA, getIntent().getIntExtra(EXTRA_CATEGORIA_ANTERIOR,0));
-            intent.putExtra(CombinacionesActivity.EXTRA_TALLA, getIntent().getIntExtra(EXTRA_TALLA_ANTERIOR,0));
-            intent.putExtra(CombinacionesActivity.EXTRA_COLOR, getIntent().getIntExtra(EXTRA_COLOR_ANTERIOR,0));
+            intent.putExtra(CombinacionesActivity.EXTRA_ARTICULO, getIntent()
+                    .getIntExtra(EXTRA_ARTICULO_ANTERIOR,0));
+            intent.putExtra(CombinacionesActivity.EXTRA_MARCA, getIntent()
+                    .getIntExtra(EXTRA_MARCA_ANTERIOR,0));
+            intent.putExtra(CombinacionesActivity.EXTRA_CATEGORIA, getIntent()
+                    .getIntExtra(EXTRA_CATEGORIA_ANTERIOR,0));
+            intent.putExtra(CombinacionesActivity.EXTRA_TALLA, getIntent()
+                    .getIntExtra(EXTRA_TALLA_ANTERIOR,0));
+            intent.putExtra(CombinacionesActivity.EXTRA_COLOR, getIntent()
+                    .getIntExtra(EXTRA_COLOR_ANTERIOR,0));
             startActivity(intent);
         }
         else
         {
-
             Intent intent = new Intent(this, ArticulosActivity.class);
-            intent.putExtra(ArticulosActivity.EXTRA_CATEGORIA, getIntent().getIntExtra(EXTRA_CATEGORIA, 0));
-            intent.putExtra(ArticulosActivity.EXTRA_MARCA, getIntent().getIntExtra(EXTRA_MARCA, 0));
+            intent.putExtra(ArticulosActivity.EXTRA_CATEGORIA, getIntent()
+                    .getIntExtra(EXTRA_CATEGORIA, 0));
+            intent.putExtra(ArticulosActivity.EXTRA_MARCA, getIntent()
+                    .getIntExtra(EXTRA_MARCA, 0));
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }

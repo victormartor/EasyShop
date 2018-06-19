@@ -11,15 +11,18 @@ import java.net.URL;
 import victor.easyshop.data.EasyShop;
 
 /**
- * Autor: Víctor Martín Torres - 30/8/17
- *
  * Clase que representa una Imagen.
+ * @author Víctor Martín Torres
  */
 public class Imagen
 {
     private String url;
     private Bitmap bitmap;
 
+    /**
+     * Constructor
+     * @param url la URL de la imagen en el servidor
+     */
     public Imagen(String url)
     {
         this.url = url;
@@ -35,7 +38,10 @@ public class Imagen
     }
     public void setBitmap(Bitmap bitmap) {this.bitmap = bitmap;}
 
-    //Función para cargar la imagen de internet desde la URL
+    /**
+     * Función para cargar la imagen de internet desde la URL
+     * @throws IOException error al conectar con el servidor
+     */
     public void cargarImagen() throws IOException
     {
         if (bitmap == null) {
@@ -53,7 +59,10 @@ public class Imagen
         }
     }
 
-    //Función para cargar la imagen de internet desde la URL en HD
+    /**
+     * Función para cargar la imagen de internet desde la URL en HD
+     * @throws IOException error al conectar con el servidor
+     */
     public void cargarImagenHD() throws IOException
     {
         if (bitmap == null) {

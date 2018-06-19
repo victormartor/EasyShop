@@ -28,16 +28,16 @@ import victor.easyshop.clases.Cliente;
 import victor.easyshop.clases.Inactividad;
 import victor.easyshop.data.EasyShop;
 
-/*
- * Autor: Víctor Martín Torres - 30/8/17
- *
- * Clase ActividadCarrito: muestra una lista con scroll hacia abajo de los artículos en el carrito. A la derecha está
- * el ticket de compra con los diferentes artículos, su referencia y su precio. Bajo el ticket se encuentra el botón
- * para confirmar la compra y otro para vaciar el carrito.
+/**
+ * Muestra una lista con scroll hacia abajo de los artículos en el carrito. A la derecha está
+ * el ticket de compra con los diferentes artículos, su referencia y su precio. Bajo el ticket se
+ * encuentra el botón para confirmar la compra y otro para vaciar el carrito.
  *
  * También tiene una Toolbar a la izquierda que contiene:
  *    -un botón para volver atrás.
  *    -un botón con el icono de la aplicación que lleva al menú de marcas.
+ *
+ * @author Víctor Martín Torres
  */
 public class CarritoActivity extends AppCompatActivity
 {
@@ -56,11 +56,11 @@ public class CarritoActivity extends AppCompatActivity
 
         //Inactividad
         reiniciar_inactividad();
-        //if(inactividad != null) inactividad.onProgressUpdate(this);
 
         //Texto vaciar carro
         TextView texto_vaciar_carro = findViewById(R.id.texto_vaciar_carro);
-        texto_vaciar_carro.setPaintFlags(texto_vaciar_carro.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        texto_vaciar_carro.setPaintFlags(texto_vaciar_carro.getPaintFlags() |
+                Paint.UNDERLINE_TEXT_FLAG);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +69,9 @@ public class CarritoActivity extends AppCompatActivity
 
     //CARGAR DATOS//////////////////////////////////////
 
-    //cargar imagenes de los artículos
+    /**
+     * cargar imagenes de los artículos
+     */
     private class cargarImagenesCarro extends AsyncTask<Carrito, Void, Carrito>
     {
         ProgressDialog pDialog;
@@ -96,8 +98,8 @@ public class CarritoActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onPreExecute() {
-
+        protected void onPreExecute()
+        {
             pDialog = new ProgressDialog(CarritoActivity.this);
             pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             pDialog.setMessage(getString(R.string.cargando));
@@ -107,27 +109,31 @@ public class CarritoActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onPostExecute(Carrito carrito) {
+        protected void onPostExecute(Carrito carrito)
+        {
             pDialog.dismiss();
 
             GridView gridView = findViewById(R.id.grid);
             CarritoAdapter adaptador = new CarritoAdapter(CarritoActivity.this,
                     carrito.getArticulos());
             gridView.setAdapter(adaptador);
-
         }
 
         @Override
-        protected void onCancelled() {
+        protected void onCancelled()
+        {
             Toast toast = Toast.makeText(CarritoActivity.this,
-                    getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
+                    getString(R.string.error_conexion)+"\n"+_sRespuesta,
+                    Toast.LENGTH_SHORT);
             toast.show();
             findViewById(R.id.grid).setVisibility(View.INVISIBLE);
             findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
         }
     }
 
-    //Función para actualizar la lista de artículos
+    /**
+     * Función para actualizar la lista de artículos
+     */
     private void actualizarLista()
     {
         //TICKET
@@ -172,8 +178,11 @@ public class CarritoActivity extends AppCompatActivity
         actualizar_carrito();
     }
 
-    //MODIFICAR TOOLBAR
-    private void pulsar_carrito(){
+    /**
+     * MODIFICAR TOOLBAR
+     */
+    private void pulsar_carrito()
+    {
         ImageView imageView = findViewById(R.id.imageViewMarca);
         imageView.setBackgroundColor(Color.BLACK);
         FrameLayout frameLayout = findViewById(R.id.fondo_carrito);
@@ -186,17 +195,12 @@ public class CarritoActivity extends AppCompatActivity
 
     //MODIFICADORES////////////////////////////////////
 
-    //Acción para vaciar el carrito
+    /**
+     * Acción para vaciar el carrito
+     * @param view la vista
+     */
     public void vaciar(View view)
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        inactividad.onProgressUpdate(this);
-        */
         reiniciar_inactividad();
         Carrito carrito = ((EasyShop)this.getApplication()).getCarrito();
 
@@ -231,17 +235,12 @@ public class CarritoActivity extends AppCompatActivity
         dialogo.show();
     }
 
-    //Acción para eliminar un artículo de la lista
+    /**
+     * Acción para eliminar un artículo de la lista
+     * @param view la vista
+     */
     public void eliminar(View view)
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        inactividad.onProgressUpdate(this);
-        */
         reiniciar_inactividad();
         final View mi_view = view;
 
@@ -257,7 +256,8 @@ public class CarritoActivity extends AppCompatActivity
             public void onClick(DialogInterface dialogo1, int id)
             {
                 GridView gridView = findViewById(R.id.grid);
-                Carrito.ArticuloCarrito item = (Carrito.ArticuloCarrito) gridView.getItemAtPosition(gridView.getPositionForView(mi_view));
+                Carrito.ArticuloCarrito item = (Carrito.ArticuloCarrito)
+                        gridView.getItemAtPosition(gridView.getPositionForView(mi_view));
 
                 ((EasyShop)CarritoActivity.this.getApplication()).getCarrito().eliminarArticulo(item);
 
@@ -273,17 +273,12 @@ public class CarritoActivity extends AppCompatActivity
         dialogo.show();
     }
 
-    //Accion al pulsar el botón de comprar y pagar en caja
+    /**
+     * Accion al pulsar el botón de comprar y pagar en caja
+     * @param view la vista
+     */
     public void comprar(View view)
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        inactividad.onProgressUpdate(this);
-        */
         reiniciar_inactividad();
         Carrito carrito = ((EasyShop)this.getApplication()).getCarrito();
 
@@ -305,10 +300,6 @@ public class CarritoActivity extends AppCompatActivity
                 {
                     //ENVIAR TICKET DE COMPRA
                     new enviarCompra().execute();
-                    /*
-                    enviarCompra enviar = new enviarCompra();
-                    enviar.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    */
                 }
             });
         }
@@ -321,7 +312,9 @@ public class CarritoActivity extends AppCompatActivity
         dialogo.show();
     }
 
-    //clase enviar compra
+    /**
+     * clase enviar compra
+     */
     private class enviarCompra extends AsyncTask<Void, Void, Integer>
     {
         ProgressDialog pDialog;
@@ -351,8 +344,8 @@ public class CarritoActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onPreExecute() {
-
+        protected void onPreExecute()
+        {
             enviado = true;
             pDialog = new ProgressDialog(CarritoActivity.this);
             pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -369,8 +362,8 @@ public class CarritoActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onPostExecute(Integer numCliente) {
-
+        protected void onPostExecute(Integer numCliente)
+        {
             pDialog.dismiss();
 
             if(enviado)
@@ -384,7 +377,8 @@ public class CarritoActivity extends AppCompatActivity
 
                 dialogo.setTitle(getString(R.string.ticket_enviado));
 
-                String mensaje = getString(R.string.ticket_enviado_confirmacion)+"\n"+getString(R.string.recuerde)+" "+numCliente;
+                String mensaje = getString(R.string.ticket_enviado_confirmacion)+"\n"
+                        +getString(R.string.recuerde)+" "+numCliente;
                 dialogo.setMessage(mensaje);
 
                 dialogo.setCancelable(false);
@@ -402,11 +396,13 @@ public class CarritoActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onCancelled() {
+        protected void onCancelled()
+        {
             pDialog.dismiss();
             if(enviado)
             {
-                Toast t = Toast.makeText(CarritoActivity.this,getString(R.string.error)+"\n"+_sRespuesta,Toast.LENGTH_LONG);
+                Toast t = Toast.makeText(CarritoActivity.this,getString(R.string.error)+"\n"
+                        +_sRespuesta,Toast.LENGTH_LONG);
                 t.show();
             }
         }
@@ -414,49 +410,47 @@ public class CarritoActivity extends AppCompatActivity
 
     //NAVEGAR A OTRA ACTIVIDAD/////////////////////////
 
-    //Acción al pulsar la imagen del artículo dentro de la lista
+    /**
+     * Acción al pulsar la imagen del artículo dentro de la lista
+     * @param view la vista
+     */
     public void ampliar(View view)
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
         Intent intent = new Intent(this, ImagenActivity.class);
 
         GridView gridView = findViewById(R.id.grid);
-        Carrito.ArticuloCarrito item = (Carrito.ArticuloCarrito) gridView.getItemAtPosition(gridView.getPositionForView(view));
+        Carrito.ArticuloCarrito item = (Carrito.ArticuloCarrito)
+                gridView.getItemAtPosition(gridView.getPositionForView(view));
         intent.putExtra(ImagenActivity.EXTRA_IMAGEN, item.getImagenURL());
 
         startActivityForResult(intent,0);
     }
 
 
-    //Acción al pulsar el texto del articulo del carrito
+    /**
+     * Acción al pulsar el texto del articulo del carrito
+     * @param view la vista
+     */
     public void iraArticulo(View view)
     {
         GridView gridView = findViewById(R.id.grid);
-        Carrito.ArticuloCarrito item = (Carrito.ArticuloCarrito) gridView.getItemAtPosition(gridView.getPositionForView(view));
+        Carrito.ArticuloCarrito item = (Carrito.ArticuloCarrito)
+                gridView.getItemAtPosition(gridView.getPositionForView(view));
 
         Intent intent = new Intent(this, UnArticuloActivity.class);
         intent.putExtra(UnArticuloActivity.EXTRA_ARTICULO, item.getId_Articulo());
         intent.putExtra(UnArticuloActivity.EXTRA_MARCA, item.getId_Marca());
         intent.putExtra(UnArticuloActivity.EXTRA_CATEGORIA, item.getId_Categoria());
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
+
         startActivity(intent);
         finish();
     }
 
 
-    //atras
+    /**
+     * atras
+     * @param view la vista
+     */
     public void atras(View view)
     {
         onBackPressed();
@@ -466,8 +460,11 @@ public class CarritoActivity extends AppCompatActivity
     //MÉTODOS GENERALES
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //Inactividad
-    public void reiniciar_inactividad(){
+    /**
+     * Inactividad
+     */
+    public void reiniciar_inactividad()
+    {
         Inactividad inactividad = ((EasyShop)this.getApplication()).getInactividad();
         if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
         {
@@ -480,16 +477,23 @@ public class CarritoActivity extends AppCompatActivity
         }
     }
 
-    //Cargar datos de nuevo
-    public void recargar(View view){
+    /**
+     * Cargar datos de nuevo
+     * @param view la vista
+     */
+    public void recargar(View view)
+    {
         reiniciar_inactividad();
         findViewById(R.id.grid).setVisibility(View.VISIBLE);
         findViewById(R.id.button_recargar).setVisibility(View.INVISIBLE);
         new cargarImagenesCarro().execute(((EasyShop)this.getApplication()).getCarrito());
     }
 
-    //Actualizar carrito
-    private void actualizar_carrito(){
+    /**
+     * Actualizar carrito
+     */
+    private void actualizar_carrito()
+    {
         TextView num_art_carrito = findViewById(R.id.numero_art_carrito);
         int n = ((EasyShop)this.getApplication()).getCarrito().getNumArticulos();
         if (n > 0)
@@ -500,7 +504,9 @@ public class CarritoActivity extends AppCompatActivity
         else num_art_carrito.setVisibility(View.INVISIBLE);
     }
 
-    //Función para personalizar la Toolbar
+    /**
+     * Función para personalizar la Toolbar
+     */
     private void usarToolbar()
     {
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -510,37 +516,44 @@ public class CarritoActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    //Acción del botón para volver atrás
+    /**
+     * Acción del botón para volver atrás
+     * @return true si ha ido correctamente
+     */
     @Override
     public boolean onSupportNavigateUp()
     {
         onBackPressed();
-        return false;
+        return true;
     }
 
-    //Acción al pulsar en el icono del carrito
+    /**
+     * Acción al pulsar el botón del carrito
+     * @param view la vista
+     */
     public void verCarro(View view)
     {
         onBackPressed();
     }
 
-    //Acción al pulsar el icono de la aplicación
+    /**
+     * Acción al pulsar el icono de la aplicación
+     * @param view la vista
+     */
     public void portada(View view)
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
         Intent intent = new Intent(this, MarcasActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }
 
-
+    /**
+     * Acción automática al volverse abrir después de cerrarse otra actividad
+     * @param requestCode código entrante
+     * @param resultCode código resultante
+     * @param data datos que necesitan pasarse
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -548,18 +561,12 @@ public class CarritoActivity extends AppCompatActivity
         reiniciar_inactividad();
     }
 
-
+    /**
+     * Acción para volver atrás
+     */
     @Override
     public void onBackPressed()
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
-        //setResult(RESULT_CANCELED, null);
         super.onBackPressed();
         finish();
     }

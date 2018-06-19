@@ -21,16 +21,16 @@ import victor.easyshop.clases.Inactividad;
 import victor.easyshop.clases.Marca;
 import victor.easyshop.data.EasyShop;
 
-/*
- * Autor: Víctor Martín Torres - 30/8/17
- *
- * Clase ActividadCombinaciones: muestra una lista de artículos que combinan con el que ha sido comprado.
+/**
+ * Muestra una lista de artículos que combinan con el que ha sido comprado.
  *
  * También tiene una Toolbar a la izquierda que contiene:
  *    -un botón para volver atrás.
  *    -un botón con la imagen de la marca que si es presionado lleva directamente a las categorías de la marca.
  *    -un botón para acceder al carrito.
  *    -un botón con el icono de la aplicación que lleva al menú de marcas.
+ *
+ * @author Víctor Martín Torres
  */
 public class CombinacionesActivity extends AppCompatActivity implements View.OnClickListener
 {
@@ -50,47 +50,15 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
         //Personalizar Toolbar
         usarToolbar();
 
-        //Inicializar atributos
-        /*
-        Marca marca = Marca.getMarcadeLista(ActividadSplash.basedeDatos.getMarcas(),getIntent().getIntExtra(EXTRA_MARCA, 0));
-        Categoria categoria = Categoria.getCategoriadeLista(marca.getCategoriasVector(), getIntent().getIntExtra(EXTRA_CATEGORIA, 0));
-        Articulo mArticulo = Articulo.getArticulodeLista(categoria.getArticulosVector(),getIntent().getIntExtra(EXTRA_ARTICULO,0));
-
-        Articulo articulo = new Articulo(mArticulo);
-        articulo.setColor(articulo.getVectorColores()[getIntent().getIntExtra(EXTRA_COLOR,0)]);
-        articulo.setTalla(getIntent().getStringExtra(EXTRA_TALLA));
-        */
+        //Cargar imagenes
         new cargarCombinaciones().execute(getIntent().getIntExtra(EXTRA_MARCA, 0),
                 getIntent().getIntExtra(EXTRA_ARTICULO,0));
 
-        //Imagen de la marca
-        /*
-        ImageView imagenMarca = (ImageView) findViewById(R.id.imageViewMarca);
-        imagenMarca.setImageBitmap(marca.getImagenBitmap());
-        */
-
-        //CARGAR LAS IMAGENES DE LAS COMBINACIONES
-        /*
-        cargarCombinaciones tarea = new cargarCombinaciones();
-        tarea.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        */
-
         //Inactividad
         reiniciar_inactividad();
-        //if(inactividad != null) inactividad.onProgressUpdate(this);
 
         //Carrito
         actualizar_carrito();
-        /*
-        TextView num_art_carrito = (TextView)findViewById(R.id.numero_art_carrito);
-        int n = carrito.getArticulos().size();
-        if (n > 0)
-        {
-            num_art_carrito.setVisibility(View.VISIBLE);
-            num_art_carrito.setText(String.format(Locale.ENGLISH,"%d",n));
-        }
-        else num_art_carrito.setVisibility(View.INVISIBLE);
-        */
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +67,9 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
 
     //CARGAR DATOS//////////////////////////////////////
 
-    //clase cargar combinaciones
+    /**
+     * clase cargar combinaciones
+     */
     private class cargarCombinaciones extends AsyncTask<Integer, Void, CombinacionesAdapter>
     {
         ProgressDialog _pDialog;
@@ -114,8 +84,11 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
             String sIP_Servidor = ((EasyShop)getApplicationContext()).getIP_Servidor();
             String sPuerto = "5000";
             try {
+                //cargar imagen de la marca
                 _marca = Cliente.getMarca(iId_Marca, sIP_Servidor, sPuerto);
                 _marca.getImagen().cargarImagen();
+
+                //cargar imagenes
                 CombinacionesAdapter articuloAdapter = new CombinacionesAdapter(
                         Cliente.getCombinacionesArticulo(iId_Articulo, sIP_Servidor, sPuerto));
 
@@ -134,8 +107,8 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
         }
 
         @Override
-        protected void onPreExecute() {
-
+        protected void onPreExecute()
+        {
             _sRespuesta = "";
             _pDialog = new ProgressDialog(CombinacionesActivity.this);
             _pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -163,7 +136,9 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
                 }
 
                 //CREACION DEL RECYCLERVIEW
-                LinearLayoutManager layoutManager= new LinearLayoutManager(CombinacionesActivity.this,LinearLayoutManager.HORIZONTAL, false);
+                LinearLayoutManager layoutManager= new LinearLayoutManager(
+                        CombinacionesActivity.this,LinearLayoutManager.HORIZONTAL,
+                        false);
                 RecyclerView mRecyclerView = findViewById(R.id.lista_combinaciones);
                 mRecyclerView.setLayoutManager(layoutManager);
                 combinaciones.setOnClickListener(CombinacionesActivity.this);
@@ -171,7 +146,8 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
             }
             else{
                 Toast toast = Toast.makeText(CombinacionesActivity.this,
-                        getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
+                        getString(R.string.error_conexion)+"\n"
+                                +_sRespuesta, Toast.LENGTH_SHORT);
                 toast.show();
                 findViewById(R.id.lista_combinaciones).setVisibility(View.INVISIBLE);
                 findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
@@ -180,10 +156,12 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
         }
 
         @Override
-        protected void onCancelled() {
+        protected void onCancelled()
+        {
             _pDialog.dismiss();
             Toast toast = Toast.makeText(CombinacionesActivity.this,
-                    getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
+                    getString(R.string.error_conexion)+"\n"
+                            +_sRespuesta, Toast.LENGTH_SHORT);
             toast.show();
             findViewById(R.id.lista_combinaciones).setVisibility(View.INVISIBLE);
             findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
@@ -192,17 +170,13 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
 
     //NAVEGAR A OTRA ACTIVIDAD/////////////////////////
 
-    //Acción al pulsar en uno de los articulos de la lista de combinaciones
+    /**
+     * Acción al pulsar en uno de los articulos de la lista de combinaciones
+     * @param view la vista
+     */
     @Override
     public void onClick(View view)
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
         RecyclerView mRecyclerView = findViewById(R.id.lista_combinaciones);
         int n = mRecyclerView.getChildLayoutPosition(view);
         CombinacionesAdapter adaptador = (CombinacionesAdapter) mRecyclerView.getAdapter();
@@ -214,23 +188,31 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
         intent.putExtra(UnArticuloActivity.EXTRA_MARCA, art.getId_Marca());
         intent.putExtra(UnArticuloActivity.EXTRA_COMBINACIONES,true);
 
-        intent.putExtra(UnArticuloActivity.EXTRA_ARTICULO_ANTERIOR,getIntent().getIntExtra(EXTRA_ARTICULO,0));
-        intent.putExtra(UnArticuloActivity.EXTRA_CATEGORIA_ANTERIOR,getIntent().getIntExtra(EXTRA_CATEGORIA,0));
-        intent.putExtra(UnArticuloActivity.EXTRA_MARCA_ANTERIOR,getIntent().getIntExtra(EXTRA_MARCA,0));
-        intent.putExtra(UnArticuloActivity.EXTRA_COLOR_ANTERIOR,getIntent().getIntExtra(EXTRA_COLOR,0));
-        intent.putExtra(UnArticuloActivity.EXTRA_TALLA_ANTERIOR,getIntent().getIntExtra(EXTRA_TALLA,0));
+        //Se le envia los datos del anterior articulo por si pulsa el botón atrás
+        intent.putExtra(UnArticuloActivity.EXTRA_ARTICULO_ANTERIOR,getIntent()
+                .getIntExtra(EXTRA_ARTICULO,0));
+        intent.putExtra(UnArticuloActivity.EXTRA_CATEGORIA_ANTERIOR,getIntent()
+                .getIntExtra(EXTRA_CATEGORIA,0));
+        intent.putExtra(UnArticuloActivity.EXTRA_MARCA_ANTERIOR,getIntent()
+                .getIntExtra(EXTRA_MARCA,0));
+        intent.putExtra(UnArticuloActivity.EXTRA_COLOR_ANTERIOR,getIntent()
+                .getIntExtra(EXTRA_COLOR,0));
+        intent.putExtra(UnArticuloActivity.EXTRA_TALLA_ANTERIOR,getIntent()
+                .getIntExtra(EXTRA_TALLA,0));
 
         startActivity(intent);
         finish();
-
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //MÉTODOS GENERALES
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //Inactividad
-    public void reiniciar_inactividad(){
+    /**
+     * Inactividad
+     */
+    public void reiniciar_inactividad()
+    {
         Inactividad inactividad = ((EasyShop)this.getApplication()).getInactividad();
         if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
         {
@@ -243,8 +225,12 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    //Cargar datos de nuevo
-    public void recargar(View view){
+    /**
+     * Cargar datos de nuevo
+     * @param view la vista
+     */
+    public void recargar(View view)
+    {
         reiniciar_inactividad();
         findViewById(R.id.lista_combinaciones).setVisibility(View.VISIBLE);
         findViewById(R.id.button_recargar).setVisibility(View.INVISIBLE);
@@ -252,8 +238,11 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
                 getIntent().getIntExtra(EXTRA_ARTICULO,0));
     }
 
-    //Actualizar carrito
-    private void actualizar_carrito(){
+    /**
+     * Actualizar carrito
+     */
+    private void actualizar_carrito()
+    {
         TextView num_art_carrito = findViewById(R.id.numero_art_carrito);
         int n = ((EasyShop)this.getApplication()).getCarrito().getNumArticulos();
         if (n > 0)
@@ -264,7 +253,9 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
         else num_art_carrito.setVisibility(View.INVISIBLE);
     }
 
-    //Función para personalizar la Toolbar
+    /**
+     * Función para personalizar la Toolbar
+     */
     private void usarToolbar()
     {
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -274,24 +265,23 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    //Acción del botón para volver atrás
+    /**
+     * Acción del botón para volver atrás
+     * @return true si ha ido correctamente
+     */
     @Override
     public boolean onSupportNavigateUp()
     {
         onBackPressed();
-        return false;
+        return true;
     }
 
-    //Acción al pulsar en la imagen de la marca
+    /**
+     * Acción al pulsar la imagen de la marca
+     * @param view la vista
+     */
     public void iraMarca(View view)
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
         Intent intent = new Intent(this, CategoriasActivity.class);
         intent.putExtra(CategoriasActivity.EXTRA_MARCA, getIntent().getIntExtra(EXTRA_MARCA, 0));
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -299,56 +289,48 @@ public class CombinacionesActivity extends AppCompatActivity implements View.OnC
         finish();
     }
 
-    //Acción al pulsar el botón del carrito
+    /**
+     * Acción al pulsar el botón del carrito
+     * @param view la vista
+     */
     public void verCarro(View view)
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
         Intent intent = new Intent(this, CarritoActivity.class);
         startActivityForResult(intent,0);
     }
 
-    //Acción al pulsar el icono de la aplicación
+    /**
+     * Acción al pulsar el icono de la aplicación
+     * @param view la vista
+     */
     public void portada(View view)
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
         Intent intent = new Intent(this, MarcasActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }
 
+    /**
+     * Acción automática al volverse abrir después de cerrarse otra actividad
+     * @param requestCode código entrante
+     * @param resultCode código resultante
+     * @param data datos que necesitan pasarse
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode,resultCode,data);
         reiniciar_inactividad();
-        //inactividad.onProgressUpdate(this);
         actualizar_carrito();
     }
 
+    /**
+     * Acción para volver atrás
+     */
     @Override
     public void onBackPressed()
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
-
         Intent intent = new Intent(this, UnArticuloActivity.class);
         intent.putExtra(UnArticuloActivity.EXTRA_ARTICULO, getIntent().getIntExtra(EXTRA_ARTICULO, 0));
         intent.putExtra(UnArticuloActivity.EXTRA_MARCA, getIntent().getIntExtra(EXTRA_MARCA, 0));

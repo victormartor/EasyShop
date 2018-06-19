@@ -16,11 +16,11 @@ import victor.easyshop.clases.Carrito;
 import victor.easyshop.clases.Cliente;
 import victor.easyshop.data.EasyShop;
 
-/*
- * Autor: Víctor Martín Torres - 30/8/17
- *
- * Clase ActividadSplash: muestra una pantalla de carga mientras se obtienen los datos de internet.
+/**
+ * Muestra una pantalla de carga mientras se obtienen los datos de internet.
  * contiene un campo para insertar la IP del servidor donde se encuentra la aplicación para PC.
+ *
+ * @author Víctor Martín Torres
  */
 public class MainActivity extends Activity
 {
@@ -44,6 +44,10 @@ public class MainActivity extends Activity
         }
     }
 
+    /**
+     * botón conectar
+     * @param view la vista
+     */
     public void confirmar(View view)
     {
         //OBTENER LA IP
@@ -70,6 +74,9 @@ public class MainActivity extends Activity
         new ConectarServidor().execute();
     }
 
+    /**
+     * probar conexión con el servidor
+     */
     private class ConectarServidor extends AsyncTask<Void, Void, Void>
     {
         private String _sRespuesta;

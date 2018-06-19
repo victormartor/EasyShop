@@ -12,10 +12,9 @@ import victor.easyshop.activities.MarcasActivity;
 import victor.easyshop.data.EasyShop;
 
 /**
- * Autor: Víctor Martín Torres - 30/8/17
- *
- * Clase Inactividad: si la aplicación no se usa después de un tiempo establecido se vacia el carrito y
- * se vuelve al menu principal
+ * Clase Inactividad: si la aplicación no se usa después de un tiempo establecido se vacia el
+ * carrito y se vuelve al menu principal
+ * @author Víctor Martín Torres
  */
 public class Inactividad extends AsyncTask<Context, Context, Void>
 {
@@ -35,6 +34,11 @@ public class Inactividad extends AsyncTask<Context, Context, Void>
         return null;
     }
 
+    /**
+     * Función encargada de reiniciar el contador de inactividad y de cambiar el contexto donde
+     * se abrirá el mensaje de inactividad
+     * @param context contexto donde se abrirá el mensaje
+     */
     @Override
     public void onProgressUpdate(Context... context)
     {
@@ -73,6 +77,10 @@ public class Inactividad extends AsyncTask<Context, Context, Void>
     protected void onCancelled() {
     }
 
+    /**
+     * Asignar un nuevo contexto sin reiniciar la inactividad
+     * @param context el contexto donde se abrirá el mensaje
+     */
     public void setContext(Context context){mContext = context;}
 
     ////////////////////////////////////////////////////

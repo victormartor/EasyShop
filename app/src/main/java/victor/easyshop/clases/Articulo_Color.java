@@ -5,9 +5,8 @@ import android.graphics.Bitmap;
 import java.util.ArrayList;
 
 /**
- * Autor: Víctor Martín Torres - 30/8/17
- *
  * Clase que representa un color de un artículo.
+ * @author Víctor Martín Torres
  */
 public class Articulo_Color
 {
@@ -15,6 +14,12 @@ public class Articulo_Color
     private String _sNombre;
     private ArrayList<Imagen> _aImagenes;
 
+    /**
+     * Constructor
+     * @param iId el Id del color
+     * @param sNombre el nombre del color
+     * @param aImagenes las imágenes relacionadas con ese color
+     */
     public Articulo_Color(int iId, String sNombre, ArrayList<Imagen> aImagenes)
     {
         _iId = iId;

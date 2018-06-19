@@ -14,16 +14,21 @@ import java.util.ArrayList;
 import victor.easyshop.R;
 import victor.easyshop.clases.Articulo;
 
-/*
- * Autor: Víctor Martín Torres - 30/8/17
- *
- * Clase AdaptadorDeArticulo: adaptador para personalizar la vista de los articulos en la ActividadArticulos
+/**
+ * Adaptador para personalizar la vista de los articulos en la ActividadArticulos
+ * @author Víctor Martín Torres
  */
 public class ArticuloAdapter extends BaseAdapter
 {
     private Context _context;
     private ArrayList<Articulo> _aArticulos;
 
+    /**
+     * Constructor a partir de un array de elementos
+     * @param context el contexto donde se va a desplegar el grid
+     * @param aArticulos lista de elementos
+     * @throws IOException error al cargar las imágenes
+     */
     public ArticuloAdapter(Context context, ArrayList<Articulo> aArticulos) throws IOException
     {
         _context = context;
@@ -32,24 +37,45 @@ public class ArticuloAdapter extends BaseAdapter
             articulo.getImagen().cargarImagen();
     }
 
+    /**
+     * Devuelve el número de elementos de la lista
+     * @return el tamaño de la lista
+     */
     @Override
     public int getCount()
     {
         return _aArticulos.size();
     }
 
+    /**
+     * Devuelve un elemento de la lista
+     * @param index la posicion del elemento
+     * @return el elemento en esa posicion
+     */
     @Override
     public Articulo getItem(int index)
     {
         return _aArticulos.get(index);
     }
 
+    /**
+     * Devuelve el Id de un elemento de la lista
+     * @param index la posicion del elemento
+     * @return el Id del elemento en esa posicion
+     */
     @Override
     public long getItemId(int index)
     {
         return _aArticulos.get(index).getId();
     }
 
+    /**
+     * Cargar la vista de ese elemento en el grid
+     * @param position la posicion del elemento
+     * @param view la vista donde se va a cargar
+     * @param viewGroup el grupo de vistas
+     * @return La vista ya cargada
+     */
     @Override
     public View getView(int position, View view, ViewGroup viewGroup)
     {

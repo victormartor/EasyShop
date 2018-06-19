@@ -22,16 +22,17 @@ import victor.easyshop.clases.Inactividad;
 import victor.easyshop.clases.Marca;
 import victor.easyshop.data.EasyShop;
 
-/*
- * Autor: Víctor Martín Torres - 30/8/17
- *
- * Clase ActividadArticulos: muestra un GridView con los artículos de la categoría elegida mostrando sus precios.
+/**
+ * Muestra un GridView con los artículos de la categoría elegida mostrando sus precios.
  *
  * También tiene una Toolbar a la izquierda que contiene:
  *    -un botón para volver atrás.
- *    -un botón con la imagen de la marca que si es presionado lleva directamente a las categorías de la marca.
+ *    -un botón con la imagen de la marca que si es presionado lleva directamente a las categorías
+ *    de la marca.
  *    -un botón para acceder al carrito.
  *    -un botón con el icono de la aplicación que lleva al menú de marcas.
+ *
+ * @author Víctor Martín Torres
  */
 public class ArticulosActivity extends AppCompatActivity implements AdapterView.OnItemClickListener
 {
@@ -47,33 +48,13 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
         //Personalizar Toolbar
         usarToolbar();
 
-        //Inicializar atributos
-        //Marca marca = Marca.getMarcadeLista(ActividadSplash.basedeDatos.getMarcas(),getIntent().getIntExtra(EXTRA_MARCA, 0));
-
-        //Gridview
+        //Cargas imagenes
         new cargarArticulos().execute(getIntent().getIntExtra(EXTRA_MARCA, 0),
                                       getIntent().getIntExtra(EXTRA_CATEGORIA, 0));
 
-        /*
-        //Imagen de marca
-        ImageView imagenMarca = (ImageView) findViewById(R.id.imageViewMarca);
-        imagenMarca.setImageBitmap(marca.getImagenBitmap());
-        */
-
         //Inactividad
         reiniciar_inactividad();
-        //if(inactividad != null) inactividad.onProgressUpdate(this);
-        /*
-        //Carrito
-        TextView num_art_carrito = (TextView)findViewById(R.id.numero_art_carrito);
-        int n = carrito.getArticulos().size();
-        if (n > 0)
-        {
-            num_art_carrito.setVisibility(View.VISIBLE);
-            num_art_carrito.setText(String.format(Locale.ENGLISH,"%d",n));
-        }
-        else num_art_carrito.setVisibility(View.INVISIBLE);
-        */
+
         //Carrito
         actualizar_carrito();
     }
@@ -84,7 +65,9 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
 
     //CARGAR DATOS//////////////////////////////////////
 
-    //clase cargar articulos
+    /**
+     * clase cargar articulos
+     */
     private class cargarArticulos extends AsyncTask<Integer, Void, ArticuloAdapter>
     {
         private String _sRespuesta;
@@ -99,8 +82,11 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
             String sIP_Servidor = ((EasyShop)getApplicationContext()).getIP_Servidor();
             String sPuerto = "5000";
             try {
+                //cargar imagen de la marca
                 _marca = Cliente.getMarca(iId_Marca, sIP_Servidor, sPuerto);
                 _marca.getImagen().cargarImagen();
+
+                //cargar imagenes de articulos
                 ArticuloAdapter articuloAdapter = new ArticuloAdapter(ArticulosActivity.this,
                         Cliente.getArticulos(iId_Categoria, sIP_Servidor, sPuerto));
 
@@ -154,7 +140,8 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
             }
             else{
                 Toast toast = Toast.makeText(ArticulosActivity.this,
-                        getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
+                        getString(R.string.error_conexion)+"\n"
+                                +_sRespuesta, Toast.LENGTH_SHORT);
                 toast.show();
                 findViewById(R.id.grid).setVisibility(View.INVISIBLE);
                 findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
@@ -162,10 +149,12 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
         }
 
         @Override
-        protected void onCancelled() {
+        protected void onCancelled()
+        {
             _pDialog.dismiss();
             Toast toast = Toast.makeText(ArticulosActivity.this,
-                    getString(R.string.error_conexion)+"\n"+_sRespuesta, Toast.LENGTH_SHORT);
+                    getString(R.string.error_conexion)+"\n"
+                            +_sRespuesta, Toast.LENGTH_SHORT);
             toast.show();
             findViewById(R.id.grid).setVisibility(View.INVISIBLE);
             findViewById(R.id.button_recargar).setVisibility(View.VISIBLE);
@@ -174,7 +163,13 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
 
     //NAVEGAR A OTRA ACTIVIDAD/////////////////////////
 
-    //Acción al pulsar en uno de los artículos del GridView
+    /**
+     * Acción al pulsar en uno de los artículos del GridView
+     * @param parent el adaptador
+     * @param view la vista donde se ha pulsado
+     * @param position la posicion en la lista
+     * @param id el id del elemento
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
@@ -185,13 +180,6 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
         intent.putExtra(UnArticuloActivity.EXTRA_CATEGORIA, getIntent().getIntExtra(EXTRA_CATEGORIA, 0));
         intent.putExtra(UnArticuloActivity.EXTRA_MARCA, getIntent().getIntExtra(EXTRA_MARCA, 0));
 
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
         startActivity(intent);
         finish();
     }
@@ -200,8 +188,11 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
     //MÉTODOS GENERALES
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //Inactividad
-    public void reiniciar_inactividad(){
+    /**
+     * Inactividad
+     */
+    public void reiniciar_inactividad()
+    {
         Inactividad inactividad = ((EasyShop)this.getApplication()).getInactividad();
         if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
         {
@@ -214,8 +205,12 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
         }
     }
 
-    //Cargar datos de nuevo
-    public void recargar(View view){
+    /**
+     * Cargar datos de nuevo
+     * @param view la vista
+     */
+    public void recargar(View view)
+    {
         reiniciar_inactividad();
         findViewById(R.id.grid).setVisibility(View.VISIBLE);
         findViewById(R.id.button_recargar).setVisibility(View.INVISIBLE);
@@ -223,8 +218,11 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
                 getIntent().getIntExtra(EXTRA_CATEGORIA, 0));
     }
 
-    //Actualizar carrito
-    private void actualizar_carrito(){
+    /**
+     * Actualizar carrito
+     */
+    private void actualizar_carrito()
+    {
         TextView num_art_carrito = findViewById(R.id.numero_art_carrito);
         int n = ((EasyShop)this.getApplication()).getCarrito().getNumArticulos();
         if (n > 0)
@@ -235,7 +233,9 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
         else num_art_carrito.setVisibility(View.INVISIBLE);
     }
 
-    //Función para personalizar la Toolbar
+    /**
+     * Función para personalizar la Toolbar
+     */
     private void usarToolbar()
     {
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -245,24 +245,23 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    //Acción del botón para volver atrás
+    /**
+     * Acción del botón para volver atrás
+     * @return true si ha ido correctamente
+     */
     @Override
     public boolean onSupportNavigateUp()
     {
         onBackPressed();
-        return false;
+        return true;
     }
 
-    //Acción al pulsar la imagen de la marca
+    /**
+     * Acción al pulsar la imagen de la marca
+     * @param view la vista
+     */
     public void iraMarca(View view)
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
         Intent intent = new Intent(this, CategoriasActivity.class);
         intent.putExtra(CategoriasActivity.EXTRA_MARCA, getIntent().getIntExtra(EXTRA_MARCA, 0));
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -270,58 +269,51 @@ public class ArticulosActivity extends AppCompatActivity implements AdapterView.
         finish();
     }
 
-    //Acción al pulsar el botón del carrito
+    /**
+     * Acción al pulsar el botón del carrito
+     * @param view la vista
+     */
     public void verCarro(View view)
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
         Intent intent = new Intent(this, CarritoActivity.class);
         startActivityForResult(intent,0);
     }
 
-    //Acción al pulsar el icono de la aplicación
+    /**
+     * Acción al pulsar el icono de la aplicación
+     * @param view la vista
+     */
     public void portada(View view)
     {
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.execute(this);
-        }
-        */
         Intent intent = new Intent(this, MarcasActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }
 
+    /**
+     * Acción automática al volverse abrir después de cerrarse otra actividad
+     * @param requestCode código entrante
+     * @param resultCode código resultante
+     * @param data datos que necesitan pasarse
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode,resultCode,data);
         reiniciar_inactividad();
-        //inactividad.onProgressUpdate(this);
         actualizar_carrito();
     }
 
+    /**
+     * Acción para volver atrás
+     */
     @Override
     public void onBackPressed()
     {
         Intent intent = new Intent(this, CategoriasActivity.class);
-        intent.putExtra(CategoriasActivity.EXTRA_MARCA, getIntent().getIntExtra(EXTRA_MARCA, 0));
-
-        /*
-        if(inactividad == null || inactividad.getStatus() == AsyncTask.Status.FINISHED)
-        {
-            inactividad = new Inactividad();
-            inactividad.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,this);
-        }
-        */
+        intent.putExtra(CategoriasActivity.EXTRA_MARCA, getIntent().getIntExtra(EXTRA_MARCA,
+                0));
 
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
