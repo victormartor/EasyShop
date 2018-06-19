@@ -30,7 +30,7 @@ public class Marca
 
     /**
      * Devuelve un objeto Bitmap de la imagen de la marca
-     * @return
+     * @return la imagen de la marca
      */
     public Bitmap getImagenBitmap(){return _imagen.getBitmap();}
 

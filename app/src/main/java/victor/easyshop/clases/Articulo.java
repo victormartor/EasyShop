@@ -71,7 +71,7 @@ public class Articulo
 
     /**
      * devuelve un objeto Bitmap de la imagen característica del artículo
-     * @return
+     * @return la imagen del artículo
      */
     public Bitmap getImagenBitmap(){return _imagen.getBitmap();}
 
